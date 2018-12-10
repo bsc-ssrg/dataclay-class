@@ -1,7 +1,7 @@
 About
 =====
 
-This tarball contains the minimum set of files required to install and test dataClay as 
+Here we have the minimum set of files required to install and test dataClay as 
 explained in the manual located at:
 
     https://www.bsc.es/sites/default/files/public/bscw2/content/software-app/technical-documentation/dataclay_1.pdf
@@ -32,7 +32,7 @@ Contents
   dockers/
 
        Contains a basic docker-compose file to orchestrate a minimum set of dataClay services
-       in your local machine.
+       in your local machine. Note that for this project, docker images use tag "class"
   
   examples/
        Contains application examples and their corresponding data models
@@ -43,11 +43,24 @@ Contents
 	    demo/
 		Contains scripts to execute a demo using 2 dataClays and federation. 
 		
-	    dataClay1/
-		Contains source code, model and anything needed for dataClay 1.
+		HelloPepople/
+		    Contains HelloPeople demo in Java and Python 
+		
+		CLASSDemo/
+		    Contains CLASS demo (with federation) in Java and Python 
+		    
+		    java/dataClay1/ or python/dataClay1/
+			Contains source code, model and anything needed for dataClay 1.
 
-	    dataClay2/
-		Contains source code, model and anything needed for dataClay 2.
+		    java/dataClay2/ or python/dataClay2/
+			Contains source code, model and anything needed for dataClay 2.
+			
+			
+		    java/dataClay3/ or python/dataClay3/
+			Contains source code, model and anything needed for dataClay 3.
+			
+		    demo/
+		    	Contains all scripts for executing a CLASS demo
 
   lib/
 
