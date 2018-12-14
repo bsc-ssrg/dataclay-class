@@ -80,12 +80,12 @@ fi
 
 # Install Python client lib from PyPI
 printMsg "Installing Python lib"
-pip install dataclay 
+pip install dataclay==1.0.dev1 
  
 #Run examples
 printMsg "Testing Java installation"
 pushd examples/HelloPeople/java
-bash demo.sh
+#bash demo.sh
 #Check if HelloPeople went OK
 rc=$?
 if [[ $rc != 0 ]]; then 
