@@ -18,14 +18,14 @@ REMOTE_NODE=$1 #ex: user@node
 COMMONDIR=$SCRIPTDIR/../common
 bash $SCRIPTDIR/stopDataClaysAndClean.sh docker-compose.yml
 bash $SCRIPTDIR/startDataClay.sh docker-compose.yml # start dataClay in current node 
-ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/python_remote; bash stopDataClaysAndClean.sh $REMOTE_DOCKER" # stop dataClay in remote node 
-ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/python_remote; bash startDataClay.sh $REMOTE_DOCKER" # start dataClay in remote node 
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/python_remote; bash stopDataClaysAndClean.sh $REMOTE_DOCKER" # stop dataClay in remote node 
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/python_remote; bash startDataClay.sh $REMOTE_DOCKER" # start dataClay in remote node 
 bash $SCRIPTDIR/registerModel.sh # register accounts, contracts and model in current node
 bash $SCRIPTDIR/deploy_federation.sh $REMOTE_NODE
 bash $COMMONDIR/getStubs.sh 1 python # in current node
 
 # remote node
-ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/common; bash registerAccountsAndContracts.sh 1 python" # register accounts and contracts in remote node
-ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/common; bash getStubs.sh 1 python" # get stubs in remote node
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/common; bash registerAccountsAndContracts.sh 1 python" # register accounts and contracts in remote node
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/common; bash getStubs.sh 1 python" # get stubs in remote node
 
-bash $SCRIPTDIR/runApp.sh python # run application
+bash $SCRIPTDIR/runApp.sh python $REMOTE_NODE # run application

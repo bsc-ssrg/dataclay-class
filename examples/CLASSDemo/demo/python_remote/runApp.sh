@@ -5,9 +5,9 @@ TOOLSPATH="$TOOLSBASE/dClayTool.sh"
 CLASSPATH="$TOOLSBASE/dataclayclient.jar:$TOOLSBASE/lib/*:lib/*"
 LOG4JCONF=-Dlog4j.configurationFile=file:cfglog/log4j2.xml
 #LOG4JCONF=-Dorg.apache.logging.log4j.simplelog.StatusLogger.level=OFF
-REMOTE_NODE=$1 #ex: user@node
-
 LANG=$1
+REMOTE_NODE=$2 #ex: user@node
+
 if [ $LANG == "java" ]; then
 	CREATE_CITY="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.CreateCity"
 	GET_EVENTS="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.GetEvents"
@@ -35,9 +35,8 @@ echo "---------------------------------"
 echo "dataClay2 creating city"
 echo "---------------------------------"
 # Note that dataClay2 uses dataClay1 folder also (change that to be less confusing)
-results=$(ssh $REMOTE_NODE "cd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null; eval $CREATE_CITY)
+results=$(ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG > /dev/null; eval $CREATE_CITY")
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
-popd > /dev/null
 
 echo "---------------------------------"
 echo "dataClay1 creating Events"
@@ -50,10 +49,9 @@ popd > /dev/null
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-results=$(ssh $REMOTE_NODE "cd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null; eval $GET_EVENTS)
+results=$(ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG > /dev/null; eval $GET_EVENTS")
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
 echo $results
-popd > /dev/null
 
 echo "---------------------------------"
 echo "dataClay1 unfederate blocks"
@@ -66,11 +64,9 @@ popd > /dev/null
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-results=$(ssh $REMOTE_NODE "cd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null; eval $GET_EVENTS)
+results=$(ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG > /dev/null; eval $GET_EVENTS")
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
 echo $results
-popd > /dev/null
-
 
 echo ""
 echo " #################################### " 
