@@ -2,6 +2,8 @@
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 TOOLS_PATH=$SCRIPTDIR/../../../../tools/
 DOCKERS_PATH=$SCRIPTDIR/../../../../dockers/
+DOCKER_COMPOSE=$1 
+NUM_NODES=1
 
 function waitForBackends {  
 	TMPDIR=`mktemp -d`
@@ -27,22 +29,16 @@ function waitForBackends {
 }
 
 echo " #################################### " 
-echo " Starting dataClays " 
+echo " Starting dataClay " 
 echo " #################################### "
-pushd $DOCKERS_PATH
-docker-compose up -d
-popd
 
-NUM_DCS=2
-NUM_NODES=1
-for (( CUR_DC=1; CUR_DC<=$NUM_DCS; CUR_DC++ ))
-do
-	#wait for backends to be ready
-	# ignore debug ports (8000 something)
-	LM_PORT=`docker port dockers_logicmodule${CUR_DC}_1 | grep -v "8[0-9][0-9][0-9]" | head -1 | sed 's/.*\://'`
-	waitForBackends $LM_PORT java $NUM_NODES
-    waitForBackends $LM_PORT python $NUM_NODES
-done
+docker-compose -f $DOCKER_COMPOSE up -d
+
+#wait for backends to be ready
+# ignore debug ports (8000 something)
+LM_PORT=`docker port dockers_logicmodule${CUR_DC}_1 | grep -v "8[0-9][0-9][0-9]" | head -1 | sed 's/.*\://'`
+waitForBackends $LM_PORT java $NUM_NODES
+waitForBackends $LM_PORT python $NUM_NODES
 
 echo ""
 echo " #################################### " 

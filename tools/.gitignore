@@ -1,2 +1,4 @@
 cfgfiles
 /.dockerid
+/lib/
+/dataclayclient.jar

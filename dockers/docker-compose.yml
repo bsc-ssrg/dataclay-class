@@ -5,16 +5,9 @@ services:
   ####################################
   #  LOGIC MODULE ON DC 1            #
   ####################################
-  lmpostgres1:
-    image: "bscdataclay/postgres:trunk"
-    env_file:
-      - ./env/PG.environment
-    command: -c fsync=off
 
   logicmodule1:
     image: "bscdataclay/logicmodule:trunk"
-    depends_on:
-      - lmpostgres1
     ports:
       - "11034:1034"
     env_file:
@@ -31,16 +24,10 @@ services:
   ####################################
   #  JAVA DATA SERVICES ON DC 1      #
   ####################################
-  ds1postgres1:
-    image: "bscdataclay/postgres:trunk"
-    env_file:
-      - ./env/PG.environment
-    command: -c fsync=off
-
+  
   ds1java1:
     image: "bscdataclay/dsjava:trunk"
     depends_on:
-      - ds1postgres1
       - logicmodule1
     ports:
       - 2127
@@ -51,30 +38,6 @@ services:
     environment:
       - DATASERVICE_NAME=DS1
       - POSTGRES_HOST=ds1postgres1
-    volumes:
-      - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
-      - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-
-  ds2postgres1:
-    image: "bscdataclay/postgres:trunk"
-    env_file:
-      - ./env/PG.environment
-    command: -c fsync=off
-
-  ds2java1:
-    image: "bscdataclay/dsjava:trunk"
-    depends_on:
-      - ds2postgres1
-      - logicmodule1
-    ports:
-      - 2127
-    env_file:
-      - ./env/PG.environment
-      - ./env/DS.environment
-      - ./env/LM.environment
-    environment:
-      - DATASERVICE_NAME=DS2
-      - POSTGRES_HOST=ds2postgres1
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
@@ -100,35 +63,12 @@ services:
       - DEBUG=false
       #- PYTHONVERBOSE=1
 
-  ds2pythonee1:
-    image: "bscdataclay/dspython:trunk"
-    depends_on:
-      - ds2java1
-    ports:
-      - 6867
-    env_file:
-      - ./env/DS.environment
-      - ./env/LM.environment
-    environment:
-      - DATASERVICE_NAME=DS2
-      - POSTGRES_HOST=ds2postgres1
-      - DEBUG=false
-      #- PYTHONVERBOSE=1
-
-
   #############################################
   #   LOGIC MODULE ON DC 2                    #
   #############################################
-  lmpostgres2:
-    image: "bscdataclay/postgres:trunk"
-    env_file:
-      - ./env/PG.environment
-    command: -c fsync=off
-
+  
   logicmodule2:
     image: "bscdataclay/logicmodule:trunk"
-    depends_on:
-      - lmpostgres2
     ports:
       - "12034:2034"
     env_file:
@@ -145,16 +85,10 @@ services:
   ####################################
   #    JAVA DATA SERVICES ON DC 2    #
   ####################################
-  ds1postgres2:
-    image: "bscdataclay/postgres:trunk"
-    env_file:
-      - ./env/PG.environment
-    command: -c fsync=off
 
   ds1java2:
     image: "bscdataclay/dsjava:trunk"
     depends_on:
-      - ds1postgres2
       - logicmodule2
     ports:
       - 2127
@@ -165,31 +99,6 @@ services:
     environment:
       - DATASERVICE_NAME=DS1
       - POSTGRES_HOST=ds1postgres2
-    volumes:
-      - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
-      - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-
-
-  ds2postgres2:
-    image: "bscdataclay/postgres:trunk"
-    env_file:
-      - ./env/PG.environment
-    command: -c fsync=off
-
-  ds2java2:
-    image: "bscdataclay/dsjava:trunk"
-    depends_on:
-      - ds2postgres2
-      - logicmodule2
-    ports:
-      - 2127
-    env_file:
-      - ./env/PG.environment
-      - ./env/DS.environment
-      - ./env/LM2.environment
-    environment:
-      - DATASERVICE_NAME=DS2
-      - POSTGRES_HOST=ds2postgres2
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
@@ -214,19 +123,3 @@ services:
       - POSTGRES_HOST=ds1postgres2
       - DEBUG=false
       #- PYTHONVERBOSE=1
-
-  ds2pythonee2:
-    image: "bscdataclay/dspython:trunk"
-    depends_on:
-      - ds2java2
-    ports:
-      - 6867
-    env_file:
-      - ./env/DS.environment
-      - ./env/LM2.environment
-    environment:
-      - DATASERVICE_NAME=DS2
-      - POSTGRES_HOST=ds2postgres2
-      - DEBUG=false
-      #- PYTHONVERBOSE=1
-
