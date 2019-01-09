@@ -32,7 +32,9 @@ echo " #################################### "
 echo " Starting dataClay " 
 echo " #################################### "
 
+pushd $SCRIPTDIR/dockers
 docker-compose -f $DOCKER_COMPOSE up -d
+popd 
 
 #wait for backends to be ready
 # ignore debug ports (8000 something)

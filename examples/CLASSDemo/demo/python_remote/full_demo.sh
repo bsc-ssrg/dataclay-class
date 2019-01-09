@@ -4,7 +4,7 @@
 echo "WARNING:  This script uses ssh, make sure you have ssh keys with the remote node! Current and remote node must have the same directory $HOME/dataclay-class"
 
 if [ "$#" -ne 2 ]; then
-	echo "ERROR: Usage: full_demo.sh user@node rpi|pc"
+	echo "ERROR: Usage: full_demo.sh user@node RPI|PC"
     exit -1
 fi
 
@@ -18,8 +18,8 @@ REMOTE_NODE=$1 #ex: user@node
 COMMONDIR=$SCRIPTDIR/../common
 bash $SCRIPTDIR/stopDataClaysAndClean.sh docker-compose.yml
 bash $SCRIPTDIR/startDataClay.sh docker-compose.yml # start dataClay in current node 
-ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/python_rpi; bash stopDataClaysAndClean.sh $REMOTE_DOCKER" # stop dataClay in remote node 
-ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/python_rpi; bash startDataClay.sh $REMOTE_DOCKER" # start dataClay in remote node 
+ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/python_remote; bash stopDataClaysAndClean.sh $REMOTE_DOCKER" # stop dataClay in remote node 
+ssh $REMOTE_NODE "cd dataclay-class/CLASSDemo/demo/python_remote; bash startDataClay.sh $REMOTE_DOCKER" # start dataClay in remote node 
 bash $SCRIPTDIR/registerModel.sh # register accounts, contracts and model in current node
 bash $SCRIPTDIR/deploy_federation.sh $REMOTE_NODE
 bash $COMMONDIR/getStubs.sh 1 python # in current node

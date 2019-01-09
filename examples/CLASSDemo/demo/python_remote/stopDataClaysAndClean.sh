@@ -5,7 +5,9 @@ DOCKER_COMPOSE=$1
 echo " #################################### " 
 echo " Stopping and cleaning " 
 echo " #################################### "
+pushd $SCRIPTDIR/dockers
 docker-compose -f $DOCKER_COMPOSE down
+popd 
 
 echo ""
 echo ""
