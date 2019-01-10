@@ -38,7 +38,8 @@ popd
 
 #wait for backends to be ready
 # ignore debug ports (8000 something)
-LM_PORT=`docker port dockers_logicmodule1_1 | grep -v "8[0-9][0-9][0-9]" | head -1 | sed 's/.*\://'`
+#LM_PORT=`docker port dockers_logicmodule1_1 | grep -v "8[0-9][0-9][0-9]" | head -1 | sed 's/.*\://'`
+LM_PORT=11034
 waitForBackends $LM_PORT java $NUM_NODES
 waitForBackends $LM_PORT python $NUM_NODES
 

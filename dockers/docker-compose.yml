@@ -11,7 +11,6 @@ services:
     ports:
       - "11034:1034"
     env_file:
-      - ./env/PG.environment
       - ./env/LM.environment
     environment:
       - DATACLAY_ADMIN_USER=admin
@@ -32,7 +31,6 @@ services:
     ports:
       - 2127
     env_file:
-      - ./env/PG.environment
       - ./env/DS.environment
       - ./env/LM.environment
     environment:
@@ -49,7 +47,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee1:
-    image: "bscdataclay/dspython:trunk"
+    image: "bscdataclay/dspython:trunk-py2.7"
     depends_on:
       - ds1java1
     ports:
@@ -72,7 +70,6 @@ services:
     ports:
       - "12034:2034"
     env_file:
-      - ./env/PG.environment
       - ./env/LM2.environment
     environment:
       - DATACLAY_ADMIN_USER=admin
@@ -93,7 +90,6 @@ services:
     ports:
       - 2127
     env_file:
-      - ./env/PG.environment
       - ./env/DS.environment
       - ./env/LM2.environment
     environment:
@@ -110,7 +106,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee2:
-    image: "bscdataclay/dspython:trunk"
+    image: "bscdataclay/dspython:trunk-py2.7"
     depends_on:
       - ds1java2
     ports:

@@ -11,7 +11,6 @@ services:
     ports:
       - "11034:1034"
     env_file:
-      - ./env/PG.environment
       - ./env/LM.environment
     environment:
       - DATACLAY_ADMIN_USER=admin
@@ -32,7 +31,6 @@ services:
     ports:
       - 2127
     env_file:
-      - ./env/PG.environment
       - ./env/DS.environment
       - ./env/LM.environment
     environment:

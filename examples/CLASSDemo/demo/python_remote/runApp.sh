@@ -7,6 +7,8 @@ LOG4JCONF=-Dlog4j.configurationFile=file:cfglog/log4j2.xml
 #LOG4JCONF=-Dorg.apache.logging.log4j.simplelog.StatusLogger.level=OFF
 LANG=$1
 REMOTE_NODE=$2 #ex: user@node
+LOCAL_IP=$3 #ex 84.88.184.228
+REMOTE_IP=$4 #ex 84.88.51.177
 
 if [ $LANG == "java" ]; then
 	CREATE_CITY="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.CreateCity"
@@ -14,10 +16,10 @@ if [ $LANG == "java" ]; then
 	MAIN="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.Main"
 	UNFEDERATE="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.Unfederate"
 else
-	CREATE_CITY="python src/create_city.py"
-	GET_EVENTS="python src/get_events.py"
-	MAIN="python src/main.py"
-	UNFEDERATE="python src/unfederate.py"
+	CREATE_CITY="python3 src/create_city.py"
+	GET_EVENTS="python3 src/get_events.py"
+	MAIN="python3 src/main.py"
+	UNFEDERATE="python3 src/unfederate.py"
 fi
 
 echo " #################################### " 
@@ -26,10 +28,10 @@ echo " #################################### "
 echo ""
 
 # Export variables for demo
-export DATACLAY1_IP=10.20.30.1
-export DATACLAY1_PORT=1034
-export DATACLAY2_IP=10.20.30.3
-export DATACLAY2_PORT=1034
+export DATACLAY1_IP=$LOCAL_IP
+export DATACLAY1_PORT=11034
+export DATACLAY2_IP=$REMOTE_IP
+export DATACLAY2_PORT=11034
 
 echo "---------------------------------"
 echo "dataClay2 creating city"

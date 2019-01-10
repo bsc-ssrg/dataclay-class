@@ -9,9 +9,8 @@ services:
   logicmodule1:
     image: "bscdataclay/logicmodule:trunk"
     ports:
-      - "11034:1034"
+      - "11034:11034"
     env_file:
-      - ./env/PG.environment
       - ./env/LM.environment
     environment:
       - DATACLAY_ADMIN_USER=admin
@@ -30,9 +29,8 @@ services:
     depends_on:
       - logicmodule1
     ports:
-      - 2127
+      - "2127:2127"
     env_file:
-      - ./env/PG.environment
       - ./env/DS.environment
       - ./env/LM.environment
     environment:
@@ -53,7 +51,7 @@ services:
     depends_on:
       - ds1java1
     ports:
-      - 6867
+      - "6867:6867"
     env_file:
       - ./env/DS.environment
       - ./env/LM.environment
