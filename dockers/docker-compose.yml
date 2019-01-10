@@ -47,7 +47,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee1:
-    image: "bscdataclay/dspython:trunk-py2.7"
+    image: "bscdataclay/dspython:trunk"
     depends_on:
       - ds1java1
     ports:
@@ -106,7 +106,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee2:
-    image: "bscdataclay/dspython:trunk-py2.7"
+    image: "bscdataclay/dspython:trunk"
     depends_on:
       - ds1java2
     ports:
