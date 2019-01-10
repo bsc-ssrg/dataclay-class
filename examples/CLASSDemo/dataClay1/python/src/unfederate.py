@@ -22,19 +22,7 @@ if __name__ == "__main__":
         print("First block unfederated")
         EventsInCar.get_by_alias("block2").unfederate(dataclay_id2)
         print("Second block unfederated")
-        
-        # Check 
-        print("Checking that events in car are not accessible")
-        try:
-            events_in_car = EventsInCar.get_by_alias("block1")
-            print("ERROR: Object with alias block1 found")
-        except:
-            print("Object with alias block1 not found")
-        try:
-            events_in_car = EventsInCar.get_by_alias("block2")
-            print("ERROR: Object with alias block2 found")
-        except:
-            print("Object with alias block2 not found")
+
     except:
         traceback.print_exc()
 
