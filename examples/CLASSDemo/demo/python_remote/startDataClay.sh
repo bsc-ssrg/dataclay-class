@@ -18,6 +18,7 @@ function waitForBackends {
 	DATACLAY_TOOL=$TOOLS_PATH/dClayTool.sh
 	DSCOUNTER=1
 	while [ $DSCOUNTER -le $NUMBER_OF_SL ]; do
+		$TOOLS_PATH/dClayTool.sh GetBackends $DATACLAY_ADMIN_USER $DATACLAY_ADMIN_PASSWORD $LANGUAGE
 		NUMBER_OF_EE=`$DATACLAY_TOOL GetBackends $DATACLAY_ADMIN_USER $DATACLAY_ADMIN_PASSWORD $LANGUAGE | grep -e "^DS$DSCOUNTER" | wc -l`
 		if [ ${NUMBER_OF_EE:-0} -lt $NUMBER_OF_EE_PER_SL ]; then
 		  sleep 2
@@ -33,7 +34,12 @@ echo " Starting dataClay "
 echo " #################################### "
 
 pushd $SCRIPTDIR/dockers
-docker-compose -f $DOCKER_COMPOSE up -d
+docker-compose -f $DOCKER_COMPOSE up -d logicmodule1
+sleep 3
+docker-compose -f $DOCKER_COMPOSE up -d ds1java1
+sleep 3
+docker-compose -f $DOCKER_COMPOSE up -d ds1pythonee1
+sleep 3
 popd 
 
 #wait for backends to be ready
