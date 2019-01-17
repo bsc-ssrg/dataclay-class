@@ -16,10 +16,10 @@ if [ $LANG == "java" ]; then
 	MAIN="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.Main"
 	UNFEDERATE="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.Unfederate"
 else
-	CREATE_CITY="python3 src/create_city.py"
-	GET_EVENTS="python3 src/get_events.py"
-	MAIN="python3 src/main.py"
-	UNFEDERATE="python3 src/unfederate.py"
+	CREATE_CITY="python src/create_city.py"
+	GET_EVENTS="python src/get_events.py"
+	MAIN="python src/main.py"
+	UNFEDERATE="python src/unfederate.py"
 fi
 
 echo " #################################### " 
