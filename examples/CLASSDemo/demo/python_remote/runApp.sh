@@ -37,8 +37,7 @@ echo "---------------------------------"
 echo "dataClay2 creating city"
 echo "---------------------------------"
 # Note that dataClay2 uses dataClay1 folder also (change that to be less confusing)
-results=$(ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG > /dev/null; eval $CREATE_CITY")
-rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $CREATE_CITY"
 
 echo "---------------------------------"
 echo "dataClay1 creating Events"
@@ -51,9 +50,7 @@ popd > /dev/null
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-results=$(ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG > /dev/null; eval $GET_EVENTS")
-rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
-echo $results
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $GET_EVENTS"
 
 echo "---------------------------------"
 echo "dataClay1 unfederate blocks"
@@ -66,9 +63,7 @@ popd > /dev/null
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-results=$(ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG > /dev/null; eval $GET_EVENTS")
-rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
-echo $results
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $GET_EVENTS"
 
 echo ""
 echo " #################################### " 
