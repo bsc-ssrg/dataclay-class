@@ -80,7 +80,7 @@ fi
 
 # Install Python client lib from PyPI
 printMsg "Installing Python lib"
-pip install dataclay==2.0.dev1
+pip install dataclay==2.0.dev2
 
 #Run examples
 printMsg "Testing Java installation"

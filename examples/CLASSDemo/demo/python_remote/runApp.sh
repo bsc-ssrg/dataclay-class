@@ -37,7 +37,7 @@ echo "---------------------------------"
 echo "dataClay2 creating city"
 echo "---------------------------------"
 # Note that dataClay2 uses dataClay1 folder also (change that to be less confusing)
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $CREATE_CITY"
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $CREATE_CITY; exit"
 
 echo "---------------------------------"
 echo "dataClay1 creating Events"
@@ -50,7 +50,7 @@ popd > /dev/null
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $GET_EVENTS"
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $GET_EVENTS; exit"
 
 echo "---------------------------------"
 echo "dataClay1 unfederate blocks"
@@ -63,7 +63,7 @@ popd > /dev/null
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $GET_EVENTS"
+ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/$LANG; eval $GET_EVENTS; exit"
 
 echo ""
 echo " #################################### " 

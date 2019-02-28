@@ -15,7 +15,6 @@ services:
     environment:
       - DATACLAY_ADMIN_USER=admin
       - DATACLAY_ADMIN_PASSWORD=admin
-      - POSTGRES_HOST=lmpostgres1
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
@@ -28,14 +27,11 @@ services:
     image: "bscdataclay/dsjava:trunk"
     depends_on:
       - logicmodule1
-    ports:
-      - "2127:2127"
     env_file:
       - ./env/DS.environment
       - ./env/LM.environment
     environment:
       - DATASERVICE_NAME=DS1
-      - POSTGRES_HOST=ds1postgres1
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
@@ -50,14 +46,10 @@ services:
     image: "bscdataclay/dspython:trunk-py2.7"
     depends_on:
       - ds1java1
-    ports:
-      - "6867:6867"
     env_file:
       - ./env/DS.environment
       - ./env/LM.environment
     environment:
       - DATASERVICE_NAME=DS1
-      - POSTGRES_HOST=ds1postgres1
       - DEBUG=false
-      #- PYTHONVERBOSE=1
 
