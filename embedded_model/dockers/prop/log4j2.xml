@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration monitorInterval="60" status="off">
+<Configuration monitorInterval="60">
   <Appenders>
-    <Console name="ConsoleAppender" target="SYSTEM_ERR">
+    <Console name="ConsoleAppender" target="SYSTEM_OUT">
     	<PatternLayout pattern="%d{ISO8601} %p [%c] [%t] [%C{1}:%L] %m%n"></PatternLayout>
     </Console>
   </Appenders>
 
  <Loggers>
-         <Logger name="DataClay.api" level="off"/>
-
         <!--  Client -->
         <Logger name="ClientRuntime" level="off" />
         <Logger name="ClientManagementLib" level="off"/>
@@ -31,9 +29,9 @@
         <Logger name="heap.HeapManager" level="off"/>
         
         <!--  Logic module -->
-        <Logger name="LogicModule" level="off"/>
+        <Logger name="LogicModule" level="debug"/>
         <Logger name="LMDB" level="off"/>
-        <Logger name="managers.ClassManager.DB" level="off" />
+        <Logger name="managers" level="debug" />
         <Logger name="MetaDataService.db" level="off" />
         <Logger name="MetaDataService" level="off" />
         
@@ -46,13 +44,17 @@
         <Logger name="dataclay.dbhandler" level="off"/>
         <Logger name="dbhandler.PostgresConnection" level="off" />
         <Logger name="org.apache.commons.dbcp2" level="off"/>
-         
+        <Logger name="PostgresHandler" level="off"/>
+        <Logger name="SQLHandler" level="off"/>
+        
         <!--  Tests -->
-        <Logger name="grpc.client.logicmodule" level="off"/>
         <Logger name="mock.MockDataClay" level="info"/>
-        <Logger name="io.grpc.internal" level="off"/>
+        
+        <!--  Configuration -->
+        <Logger name="CfgDataService" level="info"/>
+        
         <!--  ROOT LOGGER -->
-    <Root level="off">
+    <Root level="debug">
       <AppenderRef ref="ConsoleAppender" />
     </Root>
   </Loggers>

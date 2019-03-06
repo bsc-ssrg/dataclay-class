@@ -16,37 +16,23 @@ if __name__ == "__main__":
         # Get dataClay 2 ID
         dataclay_id2 = register_external_dataclay(os.environ['DATACLAY2_IP'], int(os.environ['DATACLAY2_PORT']))
     
-        # Create a dictionary of events to federate
-        events_to_federate = EventsInCar()
-    
-        # Create an Event
-        position = Position(0, 1)
+        # Create thousands of event
         current_date = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S")
         event_type = 1
-        event = Event(event_type, current_date, position)
-    
-        # add event to car
-        events_to_federate.add_event(event)
-    
-        # Federate events
-        print("Events created: %s" % events_to_federate)
-        events_to_federate.make_persistent("block1")
-        events_to_federate.federate(dataclay_id2)
+        i = 0
+        while i < 100:
+
+            events_to_federate = EventsInCar()
+            position = Position(0, i)
+            event = Event(event_type, current_date, position)
         
-        # ==== New events ====
-        events_to_federate = EventsInCar()
-        position = Position(3, 2)
-        current_date = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S")
-        event_type = 6
-        event = Event(event_type, current_date, position)
-    
-        # add event to car
-        events_to_federate.add_event(event)
-    
-        # Federate events
-        print("Events created: %s" % events_to_federate)
-        events_to_federate.make_persistent("block2")
-        events_to_federate.federate(dataclay_id2)
+            # add event to car
+            events_to_federate.add_event(event)
+        
+            # Federate events
+            events_to_federate.make_persistent()
+            events_to_federate.federate(dataclay_id2)
+            i = i + 1
 
     except:
         traceback.print_exc()

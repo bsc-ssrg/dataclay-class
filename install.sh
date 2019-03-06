@@ -1,7 +1,7 @@
 #!/bin/bash
 DOCKER_COMPOSE=dockers/docker-compose.yml
 DATACLAYTOOL=tools/dClayTool.sh
-GRPCIO="1.10.1"
+GRPCIO="1.17.1"
 
 grn=$'\e[1;32m'
 blu=$'\e[1;34m'
@@ -61,7 +61,7 @@ fi
 # Check grpcio dependency
 OTHERGRPCIO=`find $HOME/.local -type d | grep grpcio | grep -v $GRPCIO`
 if [ "x$OTHERGRPCIO" != "x" ]; then
-  printMsg "Error: dataClay requires grpcio 1.10.1 but some other versions were found:\n\n  $OTHERGRPCIO"
+  printMsg "Error: dataClay requires grpcio 1.17.1 but some other versions were found:\n\n  $OTHERGRPCIO"
   exit 1
 fi
 
@@ -80,7 +80,7 @@ fi
 
 # Install Python client lib from PyPI
 printMsg "Installing Python lib"
-pip install dataclay==2.0.dev2
+pip install dataclay==2.0.dev3
 
 #Run examples
 printMsg "Testing Java installation"

@@ -32,8 +32,6 @@ cat << EOF
  GetExtDataClayID   <dc_host> <dc_port>
  RegisterDataClay   <dc_host> <dc_port>
 
- SetMetadataBackup  <leader_address>  <backup_address>
-
 EOF
 exit 0
 }
@@ -51,10 +49,24 @@ SUPPORTEDLANGS="python | java"
 SUPPORTEDDSETS="public | private"
 
 # Classpaths
+SEPPARATOR=":"
 SCRIPTPATH="$(cd "$(dirname "$0")" && pwd -P)"
+if [[ "$OSTYPE" == "cygwin" ]]; then
+        # POSIX compatibility layer and Linux environment emulation for Windows
+        SEPPARATOR=";"
+        SCRIPTPATH=$(echo "$SCRIPTPATH" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')
+elif [[ "$OSTYPE" == "msys" ]]; then
+        # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
+        SEPPARATOR=";"
+        SCRIPTPATH=$(echo "$SCRIPTPATH" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')
+elif [[ "$OSTYPE" == "win32" ]]; then
+        # I'm not sure this can happen.
+        SEPPARATOR=";"
+        SCRIPTPATH=$(echo "$SCRIPTPATH" | sed -e 's/^\///' -e 's/\//\\/g' -e 's/^./\0:/')
+fi
 LIBPATH=$SCRIPTPATH/lib
 CLIENTJAR=$SCRIPTPATH/dataclayclient.jar
-CLASSPATH=$CLIENTJAR:$LIBPATH/*:$CLASSPATH
+CLASSPATH=${CLIENTJAR}${SEPPARATOR}${LIBPATH}/*${SEPPARATOR}${CLASSPATH}
 
 
 if [ ! -z $DATACLAY_JAR ]; then
@@ -72,7 +84,6 @@ else
   DOCKER_DCLIB="$DOCKER_BASE:/usr/src/dataclay/lib"
   DOCKER_DCJAR="$DOCKER_BASE:/usr/src/dataclay/dataclay.jar"
   touch $SCRIPTPATH/.dockerid
-
   # In case of using dockers, try to find lib there 
   DOCKER_ID=`docker inspect -f "{{.Id}}" $DOCKER_BASE`
   if [ ! -f $CLIENTJAR ]; then
@@ -82,12 +93,11 @@ else
   elif [ -z "`grep $DOCKER_ID $SCRIPTPATH/.dockerid`" ]; then
 	UPDATE_LIB=1
   fi
-
   if [ ! -z $UPDATE_LIB ]; then
 	rm -f $CLIENTJAR
 	rm -Rf $LIBPATH
-    docker cp $DOCKER_DCLIB $SCRIPTPATH
-    docker cp $DOCKER_DCJAR $CLIENTJAR
+    docker cp $DOCKER_DCLIB "$SCRIPTPATH"
+    docker cp $DOCKER_DCJAR "$CLIENTJAR"
 	echo $DOCKER_ID > $SCRIPTPATH/.dockerid
 	echo "[dataClay] [tool LOG] Retrieved $CLIENTJAR from $DOCKER_DCJAR"
   fi
@@ -127,15 +137,11 @@ GET_DATACLAYID="$JAVA_OPSBASE dataclay.tool.GetCurrentDataClayID"
 GET_EXT_DATACLAYID="$JAVA_OPSBASE dataclay.tool.GetExternalDataClayID"
 REG_EXT_DATACLAY="$JAVA_OPSBASE dataclay.tool.NewDataClayInstance"
 
-# LM backup
-SET_METADATA_BACKUP="$JAVA_OPSBASE dataclay.tool.SetMetadataBackup"
-
 if [ -z $1 ]; then
 	usage
 	exit 0
 fi
 OPERATION=$1
-
 
 case $OPERATION in
 	'-h' | '--help' | '?' | 'help')
@@ -168,7 +174,7 @@ case $OPERATION in
 		;;
 	'NewModel')
 		FOLDER=$5
-		if [ $# -ne 6 ]; then
+		if [ $# -lt 6 ]; then
 			errorMsg "Missing arguments. Usage: NewModel <user_name> <user_pass> <namespace_name> <class_path> <$SUPPORTEDLANGS>"
 		fi
 		if [ ! -d $FOLDER ]; then
@@ -178,12 +184,19 @@ case $OPERATION in
 			'java')
 				$NEW_NAMESPACE $2 $3 $4 java
 				if [ $? -ge 0 ]; then
-					$JAVA_NEW_MODEL $2 $3 $4 $5
+					INIT_PARAMS="$2 $3 $4 $5"
+					if [ $# -gt 6 ]; then
+						INIT_PARAMS="$INIT_PARAMS ${@:7}"
+					fi
+					$JAVA_NEW_MODEL $INIT_PARAMS
 				fi
 				;;
 			'python')
 				$NEW_NAMESPACE $2 $3 $4 python
 				if [ $? -ge 0 ]; then
+					if [ $# -gt 6 ]; then
+						errorMsg "Prefetching is only supported in Java applications."
+					fi
 					$PY_NEW_MODEL $2 $3 $4 $5
 				fi
 				;;
@@ -224,9 +237,6 @@ case $OPERATION in
 		;;
 	'GetExtDataClayID')
 		$GET_EXT_DATACLAYID $2 $3
-		;;
-	'SetMetadataBackup')
-		$SET_METADATA_BACKUP $2 $3
 		;;
 	*)
 		echo "[ERROR]: Operation $1 is not supported."
