@@ -3,3 +3,4 @@
 /stubs/
 /dataClayMf2cStubs.jar
 *.sqlite
+/deploy/

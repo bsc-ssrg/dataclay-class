@@ -4,7 +4,8 @@ TOOLSBASE="$SCRIPTDIR/../tools"
 TOOLSPATH="$TOOLSBASE/dClayTool.sh"
 DCLIB="$TOOLSBASE/dataclayclient.jar"
 MODEL="$SCRIPTDIR/model/src/"
-NAMESPACE="classNS"
+DATACLAY_TAG="trunk"
+NAMESPACE="CityNS"
 USER="class"
 PASS="p4ssw0rd"
 DATASET="class"
@@ -16,11 +17,18 @@ function usage {
 }
 
 function docker-push-class {
-	TAG=class
-	docker push bscdataclay/logicmodule:${TAG}
-	docker push bscdataclay/dsjava:${TAG}
-	docker push bscdataclay/dspython:${TAG}
 
+	# 
+	docker push bscdataclay/dspython:class-py2.7
+	docker push bscdataclay/dspython:class-py3.6
+	docker push bscdataclay/logicmodule:class
+	docker push bscdataclay/dsjava:class
+	
+	# ARM
+	docker push bscdataclay/dspython:rpi-class-py2.7 
+	docker push bscdataclay/dspython:rpi-class-py3.6
+	docker push bscdataclay/logicmodule:rpi-class
+	docker push bscdataclay/dsjava:rpi-class
 }  
 
 echo " Welcome! this script is intended to: "
@@ -72,15 +80,14 @@ $TOOLSPATH NewDataContract $USER $PASS $DATASET $USER
 
 echo " ===== Register model in $MODEL  ====="
 TMPDIR=`mktemp -d`
-printMsg "Register model"
 $TOOLSPATH NewModel $USER $PASS $NAMESPACE $MODEL python
 rm -Rf $TMPDIR
 
 echo " ===== Retrieving execution classes into $SCRIPTDIR/execClasses  ====="
 # Copy execClasses from dsjava docker
-rm -rf $SCRIPTDIR/execClasses
-mkdir -p $SCRIPTDIR/execClasses
-docker cp dockers_ds1pythonee1_1:/usr/src/dataclay/execClasses/ $SCRIPTDIR
+rm -rf $SCRIPTDIR/deploy
+mkdir -p $SCRIPTDIR/deploy
+docker cp dockers_ds1pythonee1_1:/usr/src/app/deploy/ $SCRIPTDIR
 
 echo " ===== Retrieving SQLITE LM into $SCRIPTDIR/LM.sqlite  ====="
 rm -f $SCRIPTDIR/LM.sqlite
@@ -89,6 +96,7 @@ for table in $TABLES;
 do
 	docker exec -t dockers_logicmodule1_1 sqlite3 "//tmp/dataclay/LM" ".dump $table" >> $SCRIPTDIR/LM.sqlite
 done
+
 
 echo " ===== Stopping dataClay ====="
 pushd $SCRIPTDIR/dockers
@@ -103,10 +111,25 @@ echo " ===== Building docker bscdataclay/dsjava:class ====="
 docker tag bscdataclay/dsjava:trunk bscdataclay/dsjava:class 
 
 echo " ===== Building docker bscdataclay/dspython:class-py2.7 ====="
-docker build --build-arg DATACLAY_PYVER="2.7" -f DockerfileEECLASS -t bscdataclay/dspython:class-py2.7 .
+docker build --build-arg DATACLAY_PYVER="py2.7" -f DockerfileEECLASS -t bscdataclay/dspython:class-py2.7 .
 
 echo " ===== Building docker bscdataclay/dspython:class-py3.6 ====="
-docker build --build-arg DATACLAY_PYVER="3.6" -f DockerfileEECLASS -t bscdataclay/dspython:class-py3.6 .
+docker build --build-arg DATACLAY_PYVER="py3.6" -f DockerfileEECLASS -t bscdataclay/dspython:class-py3.6 .
+
+echo " ===== Building docker bscdataclay/dspython:rpi-class-py2.7 ====="
+docker build --build-arg DATACLAY_PYVER="py2.7" -f DockerfileEECLASS-rpi -t bscdataclay/dspython:rpi-class-py2.7 .
+
+echo " ===== Building docker bscdataclay/dspython:rpi-class-py3.6 ====="
+docker build --build-arg DATACLAY_PYVER="py3.6" -f DockerfileEECLASS-rpi -t bscdataclay/dspython:rpi-class-py3.6 .
+
+echo " ===== Building docker bscdataclay/logicmodule:rpi-class ====="
+docker build --build-arg DATACLAY_JDK="openjdk8" -f DockerfileLMCLASS-zulu -t bscdataclay/logicmodule:rpi-class .
+
+echo " ===== Building docker bscdataclay/dsjava:rpi-class ====="
+docker pull bscdataclay/dsjava:rpi-zulujdk
+docker tag bscdataclay/dsjava:rpi-zulujdk bscdataclay/dsjava:rpi-class
+
+
 
 if [ "$PUSH" = true ] ; then
 	echo " ===== Pushing dockers dataclay class dockers DockerHub ====="
