@@ -21,8 +21,12 @@ COMMONDIR=$SCRIPTDIR/../common
 
 # ==================================== sanity checks ============================== #
 # recover ips (in case test failed)
-mv $SCRIPTDIR/dockers/env/LM.environment.orig $SCRIPTDIR/dockers/env/LM.environment 
-mv $SCRIPTDIR/dockers/env/DS.environment.orig $SCRIPTDIR/dockers/env/DS.environment
+if [ -f $SCRIPTDIR/dockers/env/LM.environment.orig ]; then
+	mv $SCRIPTDIR/dockers/env/LM.environment.orig $SCRIPTDIR/dockers/env/LM.environment 
+fi 
+if [ -f $SCRIPTDIR/dockers/env/DS.environment.orig ]; then
+	mv $SCRIPTDIR/dockers/env/DS.environment.orig $SCRIPTDIR/dockers/env/DS.environment
+fi
 ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/embedded; mv dockers/env/LM.environment.orig dockers/env/LM.environment"
 ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/embedded; mv dockers/env/DS.environment.orig dockers/env/DS.environment"
 # ================================================================== #
@@ -46,7 +50,6 @@ ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/embedded; bash sta
 bash $COMMONDIR/getStubs.sh 1 python # in current node
 
 # remote node
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/common; bash registerAccountsAndContracts.sh 1 python" # register accounts and contracts in remote node
 ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/common; bash getStubs.sh 1 python" # get stubs in remote node
 
 bash $SCRIPTDIR/runApp.sh python $REMOTE_NODE $LOCAL_IP $REMOTE_IP # run application

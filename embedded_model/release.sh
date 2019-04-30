@@ -6,10 +6,9 @@ DCLIB="$TOOLSBASE/dataclayclient.jar"
 MODEL="$SCRIPTDIR/model/src/"
 DATACLAY_TAG="trunk"
 NAMESPACE="CityNS"
-USER="class"
+USER="CityUser"
 PASS="p4ssw0rd"
-DATASET="class"
-STUBSPATH="$SCRIPTDIR/wrapper/stubs"
+DATASET="City"
 function usage {
 	echo " USAGE: $0 [--push]"
 	echo "		--push Indicates to push to DockerHub "
@@ -91,12 +90,14 @@ docker cp dockers_ds1pythonee1_1:/usr/src/app/deploy/ $SCRIPTDIR
 
 echo " ===== Retrieving SQLITE LM into $SCRIPTDIR/LM.sqlite  ====="
 rm -f $SCRIPTDIR/LM.sqlite
+rm -f $SCRIPTDIR/LM.dump
+
 TABLES="account credential contract interface ifaceincontract opimplementations datacontract dataset accessedimpl accessedprop type java_type python_type memoryfeature cpufeature langfeature archfeature prefetchinginfo implementation python_implementation java_implementation annotation property java_property python_property operation java_operation python_operation metaclass java_metaclass python_metaclass namespace"
 for table in $TABLES;
 do
-	docker exec -t dockers_logicmodule1_1 sqlite3 "//tmp/dataclay/LM" ".dump $table" >> $SCRIPTDIR/LM.sqlite
+	docker exec -t dockers_logicmodule1_1 sqlite3 "//tmp/dataclay/LM" ".dump $table" >> $SCRIPTDIR/LM.dump
 done
-
+sqlite3 $SCRIPTDIR/LM.sqlite ".read $SCRIPTDIR/LM.dump"
 
 echo " ===== Stopping dataClay ====="
 pushd $SCRIPTDIR/dockers

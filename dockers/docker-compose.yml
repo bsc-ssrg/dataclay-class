@@ -9,7 +9,7 @@ services:
   logicmodule1:
     image: "bscdataclay/logicmodule:trunk"
     ports:
-      - "11034:1034"
+      - "11034:11034"
     env_file:
       - ./env/LM.environment
     environment:
