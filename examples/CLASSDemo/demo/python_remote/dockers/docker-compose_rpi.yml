@@ -7,7 +7,7 @@ services:
   ####################################
 
   logicmodule1:
-    image: "bscdataclay/logicmodule:rpi-zulujdk"
+    image: "bscdataclay/logicmodule:2.0.dev6-arm-zulujdk8"
     ports:
       - "11034:11034"
     env_file:
@@ -25,7 +25,7 @@ services:
   ####################################
 
   ds1java1:
-    image: "bscdataclay/dsjava:rpi-zulujdk"
+    image: "bscdataclay/dsjava:2.0.dev6-arm-zulujdk8"
     ports:
       - "2127:2127"
     depends_on:
@@ -46,7 +46,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee1:
-    image: "bscdataclay/dspython:rpi-py2.7"
+    image: "bscdataclay/dspython:2.0.dev6-arm-py2.7"
     ports:
       - "6867:6867"
     depends_on:
