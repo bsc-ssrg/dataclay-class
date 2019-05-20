@@ -20,7 +20,7 @@ if __name__ == "__main__":
         current_date = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S")
         event_type = 1
         i = 0
-        while i < 100:
+        while i < 10:
 
             events_to_federate = EventsInCar()
             position = Position(0, i)
@@ -30,7 +30,7 @@ if __name__ == "__main__":
             events_to_federate.add_event(event)
         
             # Federate events
-            events_to_federate.make_persistent()
+            events_to_federate.make_persistent(alias="block%i" % i)
             events_to_federate.federate(dataclay_id2)
             i = i + 1
 
