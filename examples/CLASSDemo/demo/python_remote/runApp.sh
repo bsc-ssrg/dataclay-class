@@ -45,7 +45,6 @@ echo "---------------------------------"
 pushd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null
 eval $MAIN 
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
-cat /tmp/command.log
 popd > /dev/null
 
 echo "---------------------------------"
@@ -59,7 +58,6 @@ echo "---------------------------------"
 pushd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null
 eval $UNFEDERATE 
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
-cat /tmp/command.log
 popd > /dev/null
 
 echo "---------------------------------"

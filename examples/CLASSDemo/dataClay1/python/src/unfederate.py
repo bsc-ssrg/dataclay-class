@@ -3,7 +3,7 @@ import traceback
 import os
 import datetime
 from dataclay.api import init, finish, \
-    get_external_dataclay_id
+    get_external_dataclay_id, unfederate_all
 
 # Init dataClay session
 init()
@@ -17,12 +17,9 @@ if __name__ == "__main__":
         # Get dataClay 2 ID
         dataclay_id2 = get_external_dataclay_id(os.environ['DATACLAY2_IP'], int(os.environ['DATACLAY2_PORT']))
     
-        # Unfederate 
-        i = 0
-        while i < 10:
-            EventsInCar.get_by_alias("block%i" % i).unfederate(dataclay_id2)
-            print("Block %i unfederated " % i)
-            i = i + 1
+        # Unfederate all 
+        unfederate_all(dataclay_id2)
+       
     except:
         traceback.print_exc()
 
