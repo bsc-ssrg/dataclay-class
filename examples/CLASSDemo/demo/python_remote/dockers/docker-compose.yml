@@ -56,5 +56,5 @@ services:
       - ./env/LM.environment
     environment:
       - DATASERVICE_NAME=DS1
-      - DEBUG=false
+      - DEBUG=true
 
