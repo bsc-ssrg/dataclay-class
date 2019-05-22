@@ -57,4 +57,5 @@ services:
     environment:
       - DATASERVICE_NAME=DS1
       - DEBUG=true
+      - DATACLAY_GRPC_TIMEOUT=2
 

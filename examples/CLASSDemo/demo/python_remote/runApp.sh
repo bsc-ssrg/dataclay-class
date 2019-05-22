@@ -38,7 +38,7 @@ echo "---------------------------------"
 echo "dataClay2 creating city"
 echo "---------------------------------"
 # Note that dataClay2 uses dataClay1 folder also (change that to be less confusing)
-ssh $REMOTE_NODE "source $VIRTUAL_ENV/bin/activate; cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/create_city.py; deactivate"
+ssh $REMOTE_NODE "echo $VIRTUAL_ENV; source $VIRTUAL_ENV/bin/activate; cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/create_city.py; deactivate"
 
 echo "---------------------------------"
 echo "dataClay1 creating Events"
