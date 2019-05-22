@@ -9,18 +9,7 @@ LANG=$1
 REMOTE_NODE=$2 #ex: user@node
 LOCAL_IP=$3 #ex 84.88.184.228
 REMOTE_IP=$4 #ex 84.88.51.177
-
-if [ $LANG == "java" ]; then
-	CREATE_CITY="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.CreateCity"
-	GET_EVENTS="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.GetEvents"
-	MAIN="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.Main"
-	UNFEDERATE="java $LOG4JCONF -cp stubs:bin:$CLASSPATH demo.Unfederate"
-else
-	CREATE_CITY="python src/create_city.py"
-	GET_EVENTS="python src/get_events.py"
-	MAIN="python src/main.py"
-	UNFEDERATE="python src/unfederate.py"
-fi
+VIRTUAL_ENV=$5
 
 echo " #################################### " 
 echo " # RUNNING DEMO "
@@ -33,39 +22,53 @@ export DATACLAY1_PORT=11034
 export DATACLAY2_IP=$REMOTE_IP
 export DATACLAY2_PORT=11034
 
+
+if [ ! -d "${VIRTUAL_ENV}" ]; then
+	echo " Missing virtual environment $VIRTUAL_ENV " 
+	exit -1
+fi
+echo " Calling python installation in virtual environment $VIRTUAL_ENV " 
+source $VIRTUAL_ENV/bin/activate
+echo " Using python version:"
+python --version
+pip freeze
+
+
 echo "---------------------------------"
 echo "dataClay2 creating city"
 echo "---------------------------------"
 # Note that dataClay2 uses dataClay1 folder also (change that to be less confusing)
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/create_city.py"
+ssh $REMOTE_NODE "source $VIRTUAL_ENV/bin/activate; cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/create_city.py; deactivate"
 
 echo "---------------------------------"
 echo "dataClay1 creating Events"
 echo "---------------------------------"
 pushd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null
-eval $MAIN 
+python src/main.py
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
 popd > /dev/null
 
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/get_events.py"
+ssh $REMOTE_NODE "source $VIRTUAL_ENV/bin/activate; cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/get_events.py; deactivate"
 
 echo "---------------------------------"
 echo "dataClay1 unfederate blocks"
 echo "---------------------------------"
 pushd $SCRIPTDIR/../../dataClay1/$LANG > /dev/null
-eval $UNFEDERATE 
+python src/unfederate.py
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
 popd > /dev/null
 
 echo "---------------------------------"
 echo "dataClay2 getting Events in city"
 echo "---------------------------------"
-ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/get_events.py"
+ssh $REMOTE_NODE "source $VIRTUAL_ENV/bin/activate; cd ~/dataclay-class/examples/CLASSDemo/dataClay1/python; python src/get_events.py; deactivate"
 
 echo ""
 echo " #################################### " 
 echo " DEMO FINISHED "
 echo " #################################### " 
+
+deactivate

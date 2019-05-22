@@ -3,8 +3,8 @@
 # This script uses ssh, make sure you have ssh keys with the remote node!
 echo "WARNING:  This script uses ssh, make sure you have ssh keys with the remote node! Current and remote node must have the same directory $HOME/dataclay-class"
 
-if [ "$#" -ne 5 ]; then
-	echo "ERROR: Usage: full_demo.sh user@node localIP remoteIP [local arch ARM|PC ] [remote arch ARM|PC]"
+if [ "$#" -ne 7 ]; then
+	echo "ERROR: Usage: full_demo.sh user@node localIP remoteIP [local arch ARM|PC ] [remote arch ARM|PC] virtualEnv [python-version=2|3]"
     exit -1
 fi
 
@@ -13,13 +13,23 @@ LOCAL_IP=$2 #ex 84.88.184.228
 REMOTE_IP=$3 #ex 84.88.51.177
 LOCAL_ARCH=$4
 REMOTE_ARCH=$5
+VIRTUAL_ENV=$6
+PYTHON_VERSION=$7
 REMOTE_DOCKER=docker-compose.yml
 if [ "$REMOTE_ARCH" = "ARM" ]; then
-	REMOTE_DOCKER=docker-compose-arm.yml
+	if [ "$PYTHON_VERSION" = "3" ]; then 
+		REMOTE_DOCKER=docker-compose-arm3.yml
+	else
+		REMOTE_DOCKER=docker-compose-arm.yml
+	fi
 fi
 LOCAL_DOCKER=docker-compose.yml
 if [ "$LOCAL_ARCH" = "ARM" ]; then
-	LOCAL_DOCKER=docker-compose-arm.yml
+	if [ "$PYTHON_VERSION" = "3" ]; then 
+		LOCAL_DOCKER=docker-compose-arm3.yml
+	else
+		LOCAL_DOCKER=docker-compose-arm.yml
+	fi
 fi
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 COMMONDIR=$SCRIPTDIR/../common
@@ -50,7 +60,7 @@ bash $COMMONDIR/getStubs.sh 1 python # in current node
 ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/common; bash registerAccountsAndContracts.sh 1 python" # register accounts and contracts in remote node
 ssh $REMOTE_NODE "cd ~/dataclay-class/examples/CLASSDemo/demo/common; bash getStubs.sh 1 python" # get stubs in remote node
 
-bash $SCRIPTDIR/runApp.sh python $REMOTE_NODE $LOCAL_IP $REMOTE_IP # run application
+bash $SCRIPTDIR/runApp.sh python $REMOTE_NODE $LOCAL_IP $REMOTE_IP $VIRTUAL_ENV # run application
 
 # recover ips 
 mv $SCRIPTDIR/dockers/env/LM.environment.orig $SCRIPTDIR/dockers/env/LM.environment 
