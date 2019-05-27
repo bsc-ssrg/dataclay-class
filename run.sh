@@ -9,7 +9,8 @@ echo "    				localIP: local IP address "
 echo "    				remoteIP: remote IP address "
 echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
 echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
-echo "    				virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/  REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image) "
+echo "    				virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/"
+echo "                        	REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image) "
 echo "    				embeddedModel?: must be true or false. Indicates if we are using embedded model in docker images (avoid registering model)."
 
 
@@ -57,18 +58,18 @@ ssh $REMOTE_NODE "cd ~/dataclay-class/; cp dockers/env/DS.environment dockers/en
 
 bash $DATACLAY_TOOLS/stopDataClaysAndClean.sh $LOCAL_DOCKER_FILE
 bash $DATACLAY_TOOLS/startDataClay.sh $LOCAL_DOCKER_FILE # start dataClay in current node 
-ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash stopDataClaysAndClean.sh $REMOTE_DOCKER_FILE" # stop dataClay in remote node 
-ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash startDataClay.sh $REMOTE_DOCKER_FILE" # start dataClay in remote node 
+ssh $REMOTE_NODE "cd ~/dataclay-class/; bash tools/stopDataClaysAndClean.sh $REMOTE_DOCKER_FILE" # stop dataClay in remote node 
+ssh $REMOTE_NODE "cd ~/dataclay-class/; bash tools/startDataClay.sh $REMOTE_DOCKER_FILE" # start dataClay in remote node 
 
 if [ "$EMBEDDED_MODEL" != "true" ]; then
 	bash $DATACLAY_TOOLS/registerModel.sh # register accounts, contracts and model in current node
 	bash $DATACLAY_TOOLS/deploy_federation.sh $REMOTE_NODE
-	ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash registerAccountsAndContracts.sh" # register accounts and contracts in remote node
+	ssh $REMOTE_NODE "cd ~/dataclay-class; bash tools/registerAccountsAndContracts.sh" # register accounts and contracts in remote node
 fi
 
 # GET STUBS
 bash $DATACLAY_TOOLS/getStubs.sh # get stubs 
-ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash getStubs.sh" # get stubs in remote node
+ssh $REMOTE_NODE "cd ~/dataclay-class; bash tools/getStubs.sh" # get stubs in remote node
 
 
 # ==================================== APP ==================================== #
