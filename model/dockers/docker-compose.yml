@@ -9,7 +9,7 @@ services:
   logicmodule1:
     image: "bscdataclay/logicmodule:2.0.dev7"
     ports:
-      - "11034:11034"
+      - "1034:1034"
     env_file:
       - ./env/LM.environment
     environment:
@@ -25,10 +25,10 @@ services:
 
   ds1java1:
     image: "bscdataclay/dsjava:2.0.dev7"
-    ports:
-      - "2127:2127"
     depends_on:
       - logicmodule1
+    ports:
+      - 2127
     env_file:
       - ./env/DS.environment
       - ./env/LM.environment
@@ -37,7 +37,7 @@ services:
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-
+      
   ####################################
   #  PYTHON DATA SERVICES ON DC 1    #
   ####################################
@@ -45,17 +45,16 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee1:
-    image: "bscdataclay/dspython:2.0.dev7-py2.7"
-    ports:
-      - "6867:6867"
+    image: "bscdataclay/dspython:2.0.dev7"
     depends_on:
-      - logicmodule1
       - ds1java1
+    ports:
+      - 6867
     env_file:
       - ./env/DS.environment
       - ./env/LM.environment
     environment:
       - DATASERVICE_NAME=DS1
-      - DEBUG=true
-      - DATACLAY_GRPC_TIMEOUT=2
-
+      - POSTGRES_HOST=ds1postgres1
+      - DEBUG=false
+      #- PYTHONVERBOSE=1

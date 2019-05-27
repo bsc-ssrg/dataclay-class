@@ -1,0 +1,8 @@
+ARG DATACLAY_PYVER
+FROM bscdataclay/dspython:${DATACLAY_PYVER}
+
+COPY ./deploy /usr/src/app/deploy
+
+# Execute
+# Don't use CMD in order to keep compatibility with singularity container's generator
+ENTRYPOINT ["python", "-m", "dataclay.executionenv.server"]
