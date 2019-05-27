@@ -10,8 +10,8 @@ function usage {
 	echo "Usage: run.sh user@node localIP remoteIP localDockerFile remoteDockerFile virtualEnv embeddedModel?"
 	echo "    				localIP: local IP address "
 	echo "    				remoteIP: remote IP address "
-	echo "    				localDockerFile: name of docker file to be used in local. Ex: docker-compose.yml "
-	echo "    				remoteDockerFile: name of docker file to be used in local. Ex: docker-compose-arm.yml "
+	echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
+	echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
 	echo "    				virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/  REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image) "
 	echo "    				embeddedModel?: must be true or false. Indicates if we are using embedded model in docker images (avoid registering model)."
 }
@@ -24,8 +24,8 @@ fi
 REMOTE_NODE=$1 #ex: user@node
 LOCAL_IP=$2 #ex 84.88.184.228
 REMOTE_IP=$3 #ex 84.88.51.177
-LOCAL_DOCKER_FILE=$SCRIPTDIR/$4
-REMOTE_DOCKER_FILE=$SCRIPTDIR/$5
+LOCAL_DOCKER_FILE=$4
+REMOTE_DOCKER_FILE=$5
 VIRTUAL_ENV=$6
 EMBEDDED_MODEL=$7
 if [ ! -f "$LOCAL_DOCKER_FILE" ]; then
