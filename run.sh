@@ -55,15 +55,15 @@ ssh $REMOTE_NODE "cd ~/dataclay-class/; cp dockers/env/DS.environment dockers/en
 
 # ==================================== DATACLAY START ==================================== #
 
-bash $DATACLAY_TOOLS/stopDataClaysAndClean.sh $LOCAL_DOCKER
-bash $DATACLAY_TOOLS/startDataClay.sh $LOCAL_DOCKER # start dataClay in current node 
-ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash stopDataClaysAndClean.sh $REMOTE_DOCKER" # stop dataClay in remote node 
-ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash startDataClay.sh $REMOTE_DOCKER" # start dataClay in remote node 
+bash $DATACLAY_TOOLS/stopDataClaysAndClean.sh $LOCAL_DOCKER_FILE
+bash $DATACLAY_TOOLS/startDataClay.sh $LOCAL_DOCKER_FILE # start dataClay in current node 
+ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash stopDataClaysAndClean.sh $REMOTE_DOCKER_FILE" # stop dataClay in remote node 
+ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash startDataClay.sh $REMOTE_DOCKER_FILE" # start dataClay in remote node 
 
 if [ "$EMBEDDED_MODEL" != "true" ]; then
 	bash $DATACLAY_TOOLS/registerModel.sh # register accounts, contracts and model in current node
 	bash $DATACLAY_TOOLS/deploy_federation.sh $REMOTE_NODE
-	ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash registerAccountsAndContracts.sh 1 python" # register accounts and contracts in remote node
+	ssh $REMOTE_NODE "cd ~/dataclay-class/tools; bash registerAccountsAndContracts.sh" # register accounts and contracts in remote node
 fi
 
 # GET STUBS
