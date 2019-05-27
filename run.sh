@@ -4,17 +4,14 @@ DATACLAY_TOOLS=$SCRIPTDIR/tools
 
 # This script uses ssh, make sure you have ssh keys with the remote node!
 echo "WARNING:  This script uses ssh, make sure you have ssh keys with the remote node! Current and remote node must have the same directory $HOME/dataclay-class"
-usage
+echo "Usage: run.sh user@node localIP remoteIP localDockerFile remoteDockerFile virtualEnv embeddedModel?"
+echo "    				localIP: local IP address "
+echo "    				remoteIP: remote IP address "
+echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
+echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
+echo "    				virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/  REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image) "
+echo "    				embeddedModel?: must be true or false. Indicates if we are using embedded model in docker images (avoid registering model)."
 
-function usage {
-	echo "Usage: run.sh user@node localIP remoteIP localDockerFile remoteDockerFile virtualEnv embeddedModel?"
-	echo "    				localIP: local IP address "
-	echo "    				remoteIP: remote IP address "
-	echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
-	echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
-	echo "    				virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/  REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image) "
-	echo "    				embeddedModel?: must be true or false. Indicates if we are using embedded model in docker images (avoid registering model)."
-}
 
 if [ "$#" -ne 7 ]; then
 	echo " ERROR: wrong number of arguments "
