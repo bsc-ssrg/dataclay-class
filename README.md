@@ -54,7 +54,7 @@ to execute the demo automatically.
 
 Once dataClay is running, we execute the run.sh script located in the root directory of the repository. 
 
-  $node1> run.sh user@node localIP remoteIP localDockerFile remoteDockerFile virtualEnv false
+  $node1> run.sh user@node localIP remoteIP localDockerFile remoteDockerFile virtualEnv embeddedModel?
 
 where: 
 - localIP: local IP address
