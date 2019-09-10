@@ -6,8 +6,8 @@ CLASSPATH="$TOOLSBASE/dataclayclient.jar:$TOOLSBASE/lib/*:lib/*"
 LOG4JCONF=-Dlog4j.configurationFile=file:cfglog/log4j2.xml
 #LOG4JCONF=-Dorg.apache.logging.log4j.simplelog.StatusLogger.level=OFF
 REMOTE_NODE=$1 #ex: user@node
-LOCAL_IP=$2 #ex 84.88.184.228
-REMOTE_IP=$3 #ex 84.88.51.177
+LOCAL_ADDR=$2 #ex 84.88.184.228:11034
+REMOTE_ADDR=$3 #ex 84.88.51.177:11034
 VIRTUAL_ENV=$4
 
 echo " #################################### " 
@@ -16,10 +16,8 @@ echo " #################################### "
 echo ""
 
 # Export variables for demo
-export DATACLAY1_IP=$LOCAL_IP
-export DATACLAY1_PORT=11034
-export DATACLAY2_IP=$REMOTE_IP
-export DATACLAY2_PORT=11034
+export DATACLAY1_ADDR=$LOCAL_ADDR
+export DATACLAY2_ADDR=$REMOTE_ADDR
 
 
 if [ ! -d "${VIRTUAL_ENV}" ]; then
@@ -41,7 +39,7 @@ ssh $REMOTE_NODE "echo $VIRTUAL_ENV; source $VIRTUAL_ENV/bin/activate; cd ~/data
 echo "---------------------------------"
 echo "dataClay1 creating Events"
 echo "---------------------------------"
-python src/main.py
+python src/generate_events.py
 rc=$?; if [[ $rc != 0 ]]; then echo "FAIL"; exit $rc; else echo "OK"; fi 
 
 echo "---------------------------------"

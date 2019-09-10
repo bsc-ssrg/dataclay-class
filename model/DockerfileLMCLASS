@@ -1,5 +1,5 @@
-ARG DATACLAY_VER
-FROM bscdataclay/logicmodule:${DATACLAY_VER}
+ARG DATACLAY_TAG
+FROM bscdataclay/logicmodule:${DATACLAY_TAG}
 
 COPY ./LM.sqlite /tmp/dataclay/LM
 

@@ -1,5 +1,5 @@
-ARG DATACLAY_PYVER
-FROM bscdataclay/dspython:${DATACLAY_PYVER}
+ARG DATACLAY_TAG
+FROM bscdataclay/dspython:${DATACLAY_TAG}
 
 COPY ./deploy /usr/src/app/deploy
 

@@ -9,12 +9,6 @@ echo " #################################### "
 docker-compose -f $DOCKER_COMPOSE down
 
 echo ""
-echo ""
-echo " Cleaning stubs directories "
-rm -Rf $SCRIPTDIR/../app/stubs
-echo " Done! " 
-
-echo ""
 echo " #################################### " 
 echo " DataClay stopped and cleaned " 
 echo " #################################### "

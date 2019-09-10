@@ -14,7 +14,11 @@ if __name__ == "__main__":
     try:
         
         # Get dataClay 2 ID
-        dataclay_id2 = register_external_dataclay(os.environ['DATACLAY2_IP'], int(os.environ['DATACLAY2_PORT']))
+        dataclay2_addr = os.environ['DATACLAY2_ADDR']
+        dataclay2_addr_split = dataclay2_addr.split(":")
+        dataclay2_ip = dataclay2_addr_split[0]
+        dataclay2_port = int(dataclay2_addr_split[1])
+        dataclay_id2 = register_external_dataclay(dataclay2_ip, dataclay2_port)
     
         # Create thousands of event
         current_date = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S")

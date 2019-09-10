@@ -4,11 +4,12 @@ TOOLSBASE="$SCRIPTDIR/../tools"
 TOOLSPATH="$TOOLSBASE/dClayTool.sh"
 DCLIB="$TOOLSBASE/dataclayclient.jar"
 MODEL="$SCRIPTDIR/src/"
-DATACLAY_TAG="2.0.dev8"
+DATACLAY_TAG="2.0.dev9"
 NAMESPACE="CityNS"
 USER="CityUser"
 PASS="p4ssw0rd"
 DATASET="City"
+
 function usage {
 	echo " USAGE: $0 [--push]"
 	echo "		--push Indicates to push to DockerHub "
@@ -18,16 +19,33 @@ function usage {
 function docker-push-class {
 
 	# 
-	docker push bscdataclay/dspython:class-py2.7
-	docker push bscdataclay/dspython:class-py3.6
-	docker push bscdataclay/logicmodule:class
-	docker push bscdataclay/dsjava:class
+	docker push dataclayclass/dspython:py2.7
+	docker push dataclayclass/dspython:py3.6
+	docker push dataclayclass/logicmodule
+	docker push dataclayclass/dsjava
 	
 	# ARM
-	docker push bscdataclay/dspython:rpi-class-py2.7 
-	docker push bscdataclay/dspython:rpi-class-py3.6
-	docker push bscdataclay/logicmodule:rpi-class
-	docker push bscdataclay/dsjava:rpi-class
+	docker push dataclayclass/dspython:arm-py2.7 
+	docker push dataclayclass/dspython:arm-py3.6
+	docker push dataclayclass/logicmodule:arm
+	docker push dataclayclass/dsjava:arm
+	
+	echo "
+	  Pushed images to Docker Hub:
+	
+		# i386
+		dataclayclass/dspython:py2.7
+		dataclayclass/dspython:py3.6
+		dataclayclass/logicmodule
+		dataclayclass/dsjava
+		
+		# ARM
+		dataclayclass/dspython:arm-py2.7 
+		dataclayclass/dspython:arm-py3.6
+		dataclayclass/logicmodule:arm
+		dataclayclass/dsjava:arm
+	"
+	
 }  
 
 echo " Welcome! this script is intended to: "
@@ -44,8 +62,7 @@ PUSH=false
 PUSH_PARAM=""
 
 echo " ===== Cleaning ====="
-rm -f psql_dump.sql
-rm -rf $SCRIPTDIR/execClasses
+rm -rf $SCRIPTDIR/deploy
 rm -f $SCRIPTDIR/LM.sqlite
 
 # Check push repositories
@@ -61,7 +78,7 @@ fi
 
 # Prepare client.properties
 TMPDIR=`mktemp -d`
-printf "HOST=127.0.0.1\nTCPPORT=1034" > $TMPDIR/client.properties
+printf "HOST=127.0.0.1\nTCPPORT=11034" > $TMPDIR/client.properties
 export DATACLAYCLIENTCONFIG=$TMPDIR/client.properties
 
 # Build and start dataClay
@@ -90,14 +107,11 @@ docker cp dockers_ds1pythonee1_1:/usr/src/app/deploy/ $SCRIPTDIR
 
 echo " ===== Retrieving SQLITE LM into $SCRIPTDIR/LM.sqlite  ====="
 rm -f $SCRIPTDIR/LM.sqlite
-rm -f $SCRIPTDIR/LM.dump
-
 TABLES="account credential contract interface ifaceincontract opimplementations datacontract dataset accessedimpl accessedprop type java_type python_type memoryfeature cpufeature langfeature archfeature prefetchinginfo implementation python_implementation java_implementation annotation property java_property python_property operation java_operation python_operation metaclass java_metaclass python_metaclass namespace"
 for table in $TABLES;
 do
-	docker exec -t dockers_logicmodule1_1 sqlite3 "//tmp/dataclay/LM" ".dump $table" >> $SCRIPTDIR/LM.dump
+	docker exec -t dockers_logicmodule1_1 sqlite3 "//tmp/dataclay/LM" ".dump $table" >> $SCRIPTDIR/LM.sqlite
 done
-sqlite3 $SCRIPTDIR/LM.sqlite ".read $SCRIPTDIR/LM.dump"
 
 echo " ===== Stopping dataClay ====="
 pushd $SCRIPTDIR/../dockers
@@ -105,30 +119,31 @@ docker-compose -f docker-compose.yml down
 popd
 
 # Now we can build the docker images 
-echo " ===== Building docker bscdataclay/logicmodule:class ====="
-docker build --build-arg DATACLAY_JDK="openjdk8" -f DockerfileLMCLASS -t bscdataclay/logicmodule:class .
+echo " ===== Building docker dataclayclass/logicmodule using tag $DATACLAY_TAG ====="
+docker build --build-arg DATACLAY_TAG=$DATACLAY_TAG -f DockerfileLMCLASS -t dataclayclass/logicmodule .
 
-echo " ===== Building docker bscdataclay/dsjava:class ====="
-docker tag bscdataclay/dsjava:trunk bscdataclay/dsjava:class 
+echo " ===== Building docker dataclayclass/dsjava using tag $DATACLAY_TAG ====="
+docker pull bscdataclay/dsjava:$DATACLAY_TAG
+docker tag bscdataclay/dsjava:$DATACLAY_TAG dataclayclass/dsjava
 
-echo " ===== Building docker bscdataclay/dspython:class-py2.7 ====="
-docker build --build-arg DATACLAY_PYVER="py2.7" -f DockerfileEECLASS -t bscdataclay/dspython:class-py2.7 .
+echo " ===== Building docker dataclayclass/dspython:py2.7 using tag $DATACLAY_TAG-py2.7 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_TAG-py2.7" -f DockerfileEECLASS -t dataclayclass/dspython:py2.7 .
 
-echo " ===== Building docker bscdataclay/dspython:class-py3.6 ====="
-docker build --build-arg DATACLAY_PYVER="py3.6" -f DockerfileEECLASS -t bscdataclay/dspython:class-py3.6 .
+echo " ===== Building docker dataclayclass/dspython:py3.6 using tag $DATACLAY_TAG-py3.6 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_TAG-py3.6" -f DockerfileEECLASS -t dataclayclass/dspython:py3.6 .
 
-echo " ===== Building docker bscdataclay/dspython:rpi-class-py2.7 ====="
-docker build --build-arg DATACLAY_PYVER="py2.7" -f DockerfileEECLASS-rpi -t bscdataclay/dspython:rpi-class-py2.7 .
+echo " ===== Building docker dataclayclass/dspython:arm-py2.7 using tag $DATACLAY_TAG-arm-py2.7 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_TAG-arm-py2.7" -f DockerfileEECLASS-arm -t dataclayclass/dspython:arm-py2.7 .
 
-echo " ===== Building docker bscdataclay/dspython:rpi-class-py3.6 ====="
-docker build --build-arg DATACLAY_PYVER="py3.6" -f DockerfileEECLASS-rpi -t bscdataclay/dspython:rpi-class-py3.6 .
+echo " ===== Building docker dataclayclass/dspython:arm-py3.6 using tag $DATACLAY_TAG-arm-py3.6 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_TAG-arm-py3.6" -f DockerfileEECLASS-arm -t dataclayclass/dspython:arm-py3.6 .
 
-echo " ===== Building docker bscdataclay/logicmodule:rpi-class ====="
-docker build --build-arg DATACLAY_JDK="openjdk8" -f DockerfileLMCLASS-zulu -t bscdataclay/logicmodule:rpi-class .
+echo " ===== Building docker dataclayclass/logicmodule:arm using tag $DATACLAY_TAG-arm ====="
+docker build --build-arg DATACLAY_TAG=$DATACLAY_TAG-arm -f DockerfileLMCLASS-arm -t dataclayclass/logicmodule:arm .
 
-echo " ===== Building docker bscdataclay/dsjava:rpi-class ====="
-docker pull bscdataclay/dsjava:rpi-zulujdk
-docker tag bscdataclay/dsjava:rpi-zulujdk bscdataclay/dsjava:rpi-class
+echo " ===== Building docker dataclayclass/dsjava:arm using tag $DATACLAY_TAG-arm ====="
+docker pull bscdataclay/dsjava:$DATACLAY_TAG-arm
+docker tag bscdataclay/dsjava:$DATACLAY_TAG-arm dataclayclass/dsjava:arm
 
 
 
