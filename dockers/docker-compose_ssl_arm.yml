@@ -13,7 +13,8 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
-
+      - "443:443"
+      
   ####################################
   #  LOGIC MODULE ON DC 1            #
   ####################################
@@ -27,10 +28,9 @@ services:
       - DATACLAY_ADMIN_USER=admin
       - DATACLAY_ADMIN_PASSWORD=admin
     volumes:
-      - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
+      - ./prop/global.ssh.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-      - ./traefik/cert/frontend.cert:/traefik/cert/frontend.cert:ro
-      - ./traefik/cert/frontend.key:/traefik/cert/frontend.key:ro
+      - ./traefik/cert/:/traefik/client/:ro
     command: ["-Xdebug", "-Dlog4j.configurationFile=/usr/src/dataclay/log4j2.xml",
               "-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n",
               "dataclay.logic.server.LogicModuleSrv"]
@@ -58,8 +58,6 @@ services:
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-      - ./traefik/cert/frontend.cert:/traefik/cert/frontend.cert:ro
-      - ./traefik/cert/frontend.key:/traefik/cert/frontend.key:ro
     command: ["-Xdebug", "-Dlog4j.configurationFile=/usr/src/dataclay/log4j2.xml",
               "-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n",
               "dataclay.dataservice.server.DataServiceSrv"]
@@ -85,5 +83,3 @@ services:
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-      - ./traefik/cert/frontend.cert:/traefik/cert/frontend.cert:ro
-      - ./traefik/cert/frontend.key:/traefik/cert/frontend.key:ro

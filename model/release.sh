@@ -4,7 +4,7 @@ TOOLSBASE="$SCRIPTDIR/../tools"
 TOOLSPATH="$TOOLSBASE/dClayTool.sh"
 DCLIB="$TOOLSBASE/dataclayclient.jar"
 MODEL="$SCRIPTDIR/src/"
-DATACLAY_TAG="2.0.dev9"
+DATACLAY_TAG="2.0.dev10"
 NAMESPACE="CityNS"
 USER="CityUser"
 PASS="p4ssw0rd"
@@ -82,7 +82,7 @@ printf "HOST=127.0.0.1\nTCPPORT=11034" > $TMPDIR/client.properties
 export DATACLAYCLIENTCONFIG=$TMPDIR/client.properties
 
 # Build and start dataClay
-pushd $SCRIPTDIR/../dockers
+pushd $SCRIPTDIR/dockers
 echo " ===== Starting dataClay ===== "
 docker-compose -f docker-compose.yml down #sanity check
 docker-compose -f docker-compose.yml up -d
@@ -114,7 +114,7 @@ do
 done
 
 echo " ===== Stopping dataClay ====="
-pushd $SCRIPTDIR/../dockers
+pushd $SCRIPTDIR/dockers
 docker-compose -f docker-compose.yml down
 popd
 

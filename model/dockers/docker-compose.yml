@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+
+  ####################################
+  #  LOGIC MODULE ON DC 1            #
+  ####################################
+
+  logicmodule1:
+    image: "bscdataclay/logicmodule:2.0.dev10"
+    ports:
+      - "11034:11034"
+    environment:
+      - LOGICMODULE_PORT_TCP=11034
+      - LOGICMODULE_HOST=logicmodule1
+    volumes:
+      - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
+      - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
+
+  ####################################
+  #  JAVA DATA SERVICES ON DC 1      #
+  ####################################
+
+  ds1java1:
+    image: "bscdataclay/dsjava:2.0.dev10"
+    ports:
+      - "2127:2127"
+    depends_on:
+      - logicmodule1
+    environment:
+      - DATASERVICE_NAME=DS1
+      - DATASERVICE_JAVA_PORT_TCP=2127
+      - LOGICMODULE_PORT_TCP=11034
+      - LOGICMODULE_HOST=logicmodule1
+    volumes:
+      - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
+      - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
+
+  ####################################
+  #  PYTHON DATA SERVICES ON DC 1    #
+  ####################################
+
+  # Python ExecutionEnvironment (which, by default, are unused)
+  # See initDC.sh shell script for more information on initialization
+  ds1pythonee1:
+    image: "bscdataclay/dspython:2.0.dev10-py2.7"
+    ports:
+      - "6867:6867"
+    depends_on:
+      - logicmodule1
+      - ds1java1
+    environment:
+      - DATASERVICE_NAME=DS1
+      - LOGICMODULE_PORT_TCP=11034
+      - LOGICMODULE_HOST=logicmodule1
+      - DEBUG=true
+      - DATACLAY_GRPC_TIMEOUT=10
+

@@ -3,11 +3,6 @@ logLevel = "INFO"
 
 defaultEntryPoints = ["http", "https"]
 
-
-[web]
-# Port for the status/dashboard page
-address = ":8080"
-
 [entryPoints]
     [entryPoints.http]
     address = ":80"
@@ -15,11 +10,15 @@ address = ":8080"
         entryPoint = "https"
 
    [entryPoints.https]
-    address = ":443"
+     address = ":443"
    [entryPoints.https.tls]
+
+     [entryPoints.https.tls.clientCA]
+     files = ["/ssl/rootCA.crt"]
+     optional = false
+
      # For secure connection on frontend.local
      [[entryPoints.https.tls.certificates]]
-     certFile = "/ssl/frontend.cert"
-     keyFile  = "/ssl/frontend.key"
+     certFile = "/ssl/agent.crt"
+     keyFile  = "/ssl/agent.pem"
 
-[api]
