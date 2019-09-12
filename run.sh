@@ -10,7 +10,6 @@ echo "    				localAddr: local IP address with dataClay logicmodule exposed port
 echo "    				remoteAddr: remote IP address with dataClay logicmodule exposed port.  ex 84.88.51.177:11034 "
 echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
 echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
-echo "    				python-version: Python version. "
 echo "    				virtualEnv: Python virtual environment with installed dataclay version. "
 echo " 						REMEMBER that python version and dataclay version should be consistent with docker images being used. "
 echo "                  ssl?: can be true or false Indicates we want to use secure connections."
@@ -57,10 +56,6 @@ bash $DATACLAY_TOOLS/startDataClay.sh $LOCAL_DOCKER_FILE # start dataClay in cur
 ssh $REMOTE_NODE "cd ~/dataclay-class/; bash tools/stopDataClaysAndClean.sh $REMOTE_DOCKER_FILE" # stop dataClay in remote node 
 ssh $REMOTE_NODE "cd ~/dataclay-class/; bash tools/startDataClay.sh $REMOTE_DOCKER_FILE" # start dataClay in remote node 
 
-# GET STUBS
-bash $DATACLAY_TOOLS/getStubs.sh # get stubs 
-ssh $REMOTE_NODE "cd ~/dataclay-class; bash tools/getStubs.sh" # get stubs in remote node
-
 # ==================================== APP ==================================== #
 
 
@@ -70,12 +65,17 @@ rm -f $SCRIPTDIR/app/cfgfiles/global.properties
 # check if we should use SSL
 if [ "$USE_SSL" == "true" ]; then
 	printf "HOST=127.0.0.1\nTCPPORT=443" > $SCRIPTDIR/app/cfgfiles/client.properties
-	printf "CHECK_LOG4J_DEBUG=false\nSSL_CLIENT_TRUSTED_CERTIFICATES=/traefik/cert/frontend.cert\nSSL_CLIENT_CERTIFICATE=/traefik/cert/frontend.cert\nSSL_CLIENT_KEY=/traefik/cert/frontend.key" > $SCRIPTDIR/app/cfgfiles/global.properties
+	printf "CHECK_LOG4J_DEBUG=false\nSSL_CLIENT_TRUSTED_CERTIFICATES=../dockers/traefik/cert/rootCA.crt\nSSL_CLIENT_CERTIFICATE=../dockers/traefik/cert/agent.crt\nSSL_CLIENT_KEY=../dockers/traefik/cert/agent.pem" > $SCRIPTDIR/app/cfgfiles/global.properties
 	
 else
 	printf "HOST=127.0.0.1\nTCPPORT=11034" > $SCRIPTDIR/app/cfgfiles/client.properties
 	printf "CHECK_LOG4J_DEBUG=false" > $SCRIPTDIR/app/cfgfiles/global.properties
 fi
+
+# GET STUBS
+bash $DATACLAY_TOOLS/getStubs.sh # get stubs 
+ssh $REMOTE_NODE "cd ~/dataclay-class; bash tools/getStubs.sh" # get stubs in remote node
+
 # ======= #
 
 # run app
@@ -91,3 +91,4 @@ ssh $REMOTE_NODE "cd ~/dataclay-class/; mv dockers/env/LM.environment.orig docke
 rm -f $SCRIPTDIR/app/cfgfiles/client.properties
 rm -f $SCRIPTDIR/app/cfgfiles/global.properties
 rm -Rf $SCRIPTDIR/app/stubs
+ssh $REMOTE_NODE "cd ~/dataclay-class/; rm -f app/cfgfiles/client.properties; rm -f app/cfgfiles/global.properties; rm -Rf app/stubs"

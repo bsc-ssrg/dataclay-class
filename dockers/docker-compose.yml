@@ -53,5 +53,6 @@ services:
       - LOGICMODULE_PORT_TCP=11034
       - LOGICMODULE_HOST=logicmodule1
       - DEBUG=true
-      - GRPC_CHECK_ALIVE_TIMEOUT=10
+    volumes:
+      - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
 

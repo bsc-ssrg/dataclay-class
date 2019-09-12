@@ -7,6 +7,7 @@ echo " #################################### "
 echo " Starting dataClay " 
 echo " #################################### "
 
+docker-compose -f $DOCKER_COMPOSE pull
 docker-compose -f $DOCKER_COMPOSE up -d
 
 
