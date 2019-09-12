@@ -50,29 +50,46 @@ in both nodes (see previous section).
 Also, we must have SSH access configured (without querying password) between nodes in order
 to execute the demo automatically. 
 
+### Releasing extended dataClay docker images for CLASS
+
+In order to avoid registering accounts, model, contracts, interfaces in each demo, we release in docker Hub 
+an extension of a dataClay image with already registered models and accounts.
+
+    $> cd model
+    $> ./release.sh --push 
+    
+The script will release docker images for CLASS named `dataclayclass/logicmodule`, `dataclayclass/dsjava` `dataclayclass/dspython:py2.7`, `dataclayclass/dspython:py3.6`, `dataclayclass/logicmodule:arm`, `dataclayclass/dsjava:arm` `dataclayclass/dspython:arm-py2.7` and `dspython:arm-py3.6`
+
+Make sure you have access to dataclayclass repository before running the script. If you would like to build
+the images without pushing them to DockerHub just call `release.sh`without arguments. Remember that same 
+image should be running in all nodes (with same accounts, contracts and models...)
+
+
 ### Running the demo
 
 Once dataClay is running, we execute the run.sh script located in the root directory of the repository. 
 
-  $node1> run.sh user@node localIP remoteIP localDockerFile remoteDockerFile virtualEnv embeddedModel?
+  $node1> run.sh user@node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?
 
 where: 
-- localIP: local IP address
-- remoteIP: remote IP addres
+- localIP: local IP address with dataClay logicmodule exposed port. ex 84.88.184.228:11034
+- remoteIP: remote IP addres with dataClay logicmodule exposed port. ex 84.88.184.227:11034
 - localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml
 - remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml
-- virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/
-REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image)
-- embeddedModel?: must be true or false. Indicates if we are using embedded model in docker images (avoid registering model, for current demo is false).
+- python-version: Python version.
+- dataclay-version: DataClay version.
+REMEMBER that python version and dataclay version should be consistent with docker images being used.
+- ssl?: can be true or false Indicates we want to use secure connections.
 
-This script will register the model located at `app/model` folder and run the application located at `app/src`
+This script will use extended dataclay docker images for CLASS named `dataclayclass/logicmodule`, `dataclayclass/dsjava` and `dataclayclass/dspython` and run the application located at `app/src`
 
 ## Repository structure
 
 - app: contains the demo application for CLASS 
 - dockers: contains docker-compose files to orchestrate dataClay 
-- model: contains docker files to build a specific CLASS docker image with dataclay
-- tools: contains set of tools to register models and get stubs in dataclay 
+- model: contains docker files to build a specific CLASS docker image with dataClay
+- tools: contains set of tools to register models and get stubs in dataClay 
+- security: contains scripts to generate SSL certificates for secure dataClay connections
 
 ## dataClay documentation 
 

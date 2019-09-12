@@ -8,7 +8,8 @@ LOG4JCONF=-Dlog4j.configurationFile=file:cfglog/log4j2.xml
 REMOTE_NODE=$1 #ex: user@node
 LOCAL_ADDR=$2 #ex 84.88.184.228:11034
 REMOTE_ADDR=$3 #ex 84.88.51.177:11034
-VIRTUAL_ENV=$4
+PYTHON_VERSION=$4
+DATACLAY_VERSION=$5
 
 echo " #################################### " 
 echo " # RUNNING DEMO "
@@ -20,15 +21,15 @@ export DATACLAY1_ADDR=$LOCAL_ADDR
 export DATACLAY2_ADDR=$REMOTE_ADDR
 
 
-if [ ! -d "${VIRTUAL_ENV}" ]; then
-	echo " Missing virtual environment $VIRTUAL_ENV " 
-	exit -1
-fi
-echo " Calling python installation in virtual environment $VIRTUAL_ENV " 
-source $VIRTUAL_ENV/bin/activate
+echo " Creating $VIRTUAL_ENV... (REMEMBER to have virtualenv installed)"
+rm -rf ./.pyenv*
+virtualenv -p /usr/bin/python$PYTHON_VERSION ./.pyenv$PYTHON_VERSION
+source ./.pyenv$PYTHON_VERSION/bin/activate
 echo " Using python version:"
 python --version
+pip install dataclay==$DATACLAY_VERSION
 pip freeze
+
 
 echo "---------------------------------"
 echo "dataClay2 creating city"
@@ -58,9 +59,10 @@ echo "dataClay2 getting Events in city"
 echo "---------------------------------"
 ssh $REMOTE_NODE "source $VIRTUAL_ENV/bin/activate; cd ~/dataclay-class/app; python src/get_events.py; deactivate"
 
+deactivate
+rm -rf ./.pyenv*
+
 echo ""
 echo " #################################### " 
 echo " DEMO FINISHED "
 echo " #################################### " 
-
-deactivate

@@ -2,3 +2,6 @@
 /client/
 /server-ca/
 /server/
+/agent.key
+/agent.pem
+/rootCA.crt

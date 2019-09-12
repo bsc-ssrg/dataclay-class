@@ -4,16 +4,17 @@ DATACLAY_TOOLS=$SCRIPTDIR/tools
 
 # This script uses ssh, make sure you have ssh keys with the remote node!
 echo "WARNING:  This script uses ssh, make sure you have ssh keys with the remote node! Current and remote node must have the same directory $HOME/dataclay-class"
-echo "Usage: run.sh user@node localAddr remoteAddr localDockerFile remoteDockerFile virtualEnv ssl?"
-echo "    				localAddr: local IP address ex 84.88.184.228:11034 "
-echo "    				remoteAddr: remote IP address ex 84.88.51.177:11034 "
+echo "Usage: run.sh user@node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?"
+echo "    				localAddr: local IP address with dataClay logicmodule exposed port. ex 84.88.184.228:11034 "
+echo "    				remoteAddr: remote IP address with dataClay logicmodule exposed port.  ex 84.88.51.177:11034 "
 echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
 echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
-echo "    				virtualEnv: Path to folder of python virtual environment to use to run application. Ex: $HOME/pyenv3.5/"
-echo "                        	REMEMBER that this python virtual env. should have dataclay installed (consistent version with docker image) "
+echo "    				python-version: Python version. "
+echo "    				dataclay-version: DataClay version. "
+echo " 						REMEMBER that python version and dataclay version should be consistent with docker images being used. "
 echo "                  ssl?: can be true or false Indicates we want to use secure connections."
 
-if [ "$#" -ne 7 ]; then
+if [ "$#" -ne 8 ]; then
 	echo " ERROR: wrong number of arguments "
 	exit -1
 fi
@@ -23,8 +24,9 @@ LOCAL_IP=$2 #ex 84.88.184.228
 REMOTE_IP=$3 #ex 84.88.51.177
 LOCAL_DOCKER_FILE=$4
 REMOTE_DOCKER_FILE=$5
-VIRTUAL_ENV=$6
-USE_SSL=$7
+PYTHON_VERSION=$6
+DATACLAY_VERSION=$7
+USE_SSL=$8
 if [ ! -f "$LOCAL_DOCKER_FILE" ]; then
 	echo "ERROR: $LOCAL_DOCKER_FILE does not exist. Provide a valid docker file "
     exit -1
@@ -78,7 +80,7 @@ fi
 
 # run app
 pushd $SCRIPTDIR/app/
-bash $SCRIPTDIR/app/run_app.sh $REMOTE_NODE $LOCAL_IP $REMOTE_IP $VIRTUAL_ENV # run application
+bash $SCRIPTDIR/app/run_app.sh $REMOTE_NODE $LOCAL_IP $REMOTE_IP $PYTHON_VERSION $DATACLAY_VERSION # run application
 popd 
 
 # ==================================== CLEAN ==================================== #
