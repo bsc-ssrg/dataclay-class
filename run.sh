@@ -72,6 +72,9 @@ else
 	printf "CHECK_LOG4J_DEBUG=false" > $SCRIPTDIR/app/cfgfiles/global.properties
 fi
 
+scp $SCRIPTDIR/app/cfgfiles/client.properties $REMOTE_NODE:~/dataclay-class/app/cfgfiles/client.properties
+scp $SCRIPTDIR/app/cfgfiles/global.properties $REMOTE_NODE:~/dataclay-class/app/cfgfiles/global.properties
+
 # GET STUBS
 bash $DATACLAY_TOOLS/getStubs.sh # get stubs 
 ssh $REMOTE_NODE "cd ~/dataclay-class; bash tools/getStubs.sh" # get stubs in remote node
