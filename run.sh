@@ -4,7 +4,8 @@ DATACLAY_TOOLS=$SCRIPTDIR/tools
 
 # This script uses ssh, make sure you have ssh keys with the remote node!
 echo "WARNING:  This script uses ssh, make sure you have ssh keys with the remote node! Current and remote node must have the same directory $HOME/dataclay-class"
-echo "Usage: run.sh user@node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?"
+echo "Usage: run.sh user@remote-node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?"
+echo "    				user@remote-node: Remote node ssh access "
 echo "    				localAddr: local IP address with dataClay logicmodule exposed port. ex 84.88.184.228:11034 "
 echo "    				remoteAddr: remote IP address with dataClay logicmodule exposed port.  ex 84.88.51.177:11034 "
 echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
@@ -14,7 +15,7 @@ echo "    				dataclay-version: DataClay version. "
 echo " 						REMEMBER that python version and dataclay version should be consistent with docker images being used. "
 echo "                  ssl?: can be true or false Indicates we want to use secure connections."
 
-if [ "$#" -ne 7 ]; then
+if [ "$#" -ne 8 ]; then
 	echo " ERROR: wrong number of arguments "
 	exit -1
 fi

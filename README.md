@@ -69,9 +69,10 @@ image should be running in all nodes (with same accounts, contracts and models..
 
 Once dataClay is running, we execute the run.sh script located in the root directory of the repository. 
 
-  $node1> run.sh user@node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?
+  $node1> run.sh user@remote-node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?
 
 where: 
+- user@remote-node: Remote node ssh access 
 - localIP: local IP address with dataClay logicmodule exposed port. ex 84.88.184.228:11034
 - remoteIP: remote IP addres with dataClay logicmodule exposed port. ex 84.88.184.227:11034
 - localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml
