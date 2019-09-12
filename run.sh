@@ -14,7 +14,7 @@ echo "    				dataclay-version: DataClay version. "
 echo " 						REMEMBER that python version and dataclay version should be consistent with docker images being used. "
 echo "                  ssl?: can be true or false Indicates we want to use secure connections."
 
-if [ "$#" -ne 8 ]; then
+if [ "$#" -ne 7 ]; then
 	echo " ERROR: wrong number of arguments "
 	exit -1
 fi
