@@ -4,18 +4,18 @@ DATACLAY_TOOLS=$SCRIPTDIR/tools
 
 # This script uses ssh, make sure you have ssh keys with the remote node!
 echo "WARNING:  This script uses ssh, make sure you have ssh keys with the remote node! Current and remote node must have the same directory $HOME/dataclay-class"
-echo "Usage: run.sh user@remote-node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?"
+echo "Usage: run.sh user@remote-node localAddr remoteAddr localDockerFile remoteDockerFile virtualEnv ssl?"
 echo "    				user@remote-node: Remote node ssh access "
 echo "    				localAddr: local IP address with dataClay logicmodule exposed port. ex 84.88.184.228:11034 "
 echo "    				remoteAddr: remote IP address with dataClay logicmodule exposed port.  ex 84.88.51.177:11034 "
 echo "    				localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml "
 echo "    				remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml "
 echo "    				python-version: Python version. "
-echo "    				dataclay-version: DataClay version. "
+echo "    				virtualEnv: Python virtual environment with installed dataclay version. "
 echo " 						REMEMBER that python version and dataclay version should be consistent with docker images being used. "
 echo "                  ssl?: can be true or false Indicates we want to use secure connections."
 
-if [ "$#" -ne 8 ]; then
+if [ "$#" -ne 7 ]; then
 	echo " ERROR: wrong number of arguments "
 	exit -1
 fi
@@ -25,9 +25,8 @@ LOCAL_IP=$2 #ex 84.88.184.228
 REMOTE_IP=$3 #ex 84.88.51.177
 LOCAL_DOCKER_FILE=$4
 REMOTE_DOCKER_FILE=$5
-PYTHON_VERSION=$6
-DATACLAY_VERSION=$7
-USE_SSL=$8
+VIRTUAL_ENV=$6
+USE_SSL=$7
 if [ ! -f "$LOCAL_DOCKER_FILE" ]; then
 	echo "ERROR: $LOCAL_DOCKER_FILE does not exist. Provide a valid docker file "
     exit -1
@@ -36,8 +35,8 @@ if [ ! -f "$REMOTE_DOCKER_FILE" ]; then
 	echo "ERROR: $REMOTE_DOCKER_FILE does not exist. Provide a valid docker file "
     exit -1
 fi
-if [ "$EMBEDDED_MODEL" != "true" ] && [ "$EMBEDDED_MODEL" != "false" ]; then
-	echo "ERROR: Last parameter should be true or false. True if model is embedded in docker image. Flase otherwise. "
+if [ "$USE_SSL" != "true" ] && [ "$USE_SSL" != "false" ]; then
+	echo "ERROR: Last parameter should be true or false. True if SSL must be used. Flase otherwise. "
     exit -1
 fi
 # ==================================== IPS ==================================== #
@@ -81,7 +80,7 @@ fi
 
 # run app
 pushd $SCRIPTDIR/app/
-bash $SCRIPTDIR/app/run_app.sh $REMOTE_NODE $LOCAL_IP $REMOTE_IP $PYTHON_VERSION $DATACLAY_VERSION # run application
+bash $SCRIPTDIR/app/run_app.sh $REMOTE_NODE $LOCAL_IP $REMOTE_IP $VIRTUAL_ENV # run application
 popd 
 
 # ==================================== CLEAN ==================================== #

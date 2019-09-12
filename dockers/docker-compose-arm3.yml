@@ -53,5 +53,5 @@ services:
       - LOGICMODULE_PORT_TCP=11034
       - LOGICMODULE_HOST=logicmodule1
       - DEBUG=true
-      - DATACLAY_GRPC_TIMEOUT=10
+      - GRPC_CHECK_ALIVE_TIMEOUT=10
 

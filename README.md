@@ -69,7 +69,7 @@ image should be running in all nodes (with same accounts, contracts and models..
 
 Once dataClay is running, we execute the run.sh script located in the root directory of the repository. 
 
-  $node1> run.sh user@remote-node localAddr remoteAddr localDockerFile remoteDockerFile python-version dataclay-version ssl?
+  $node1> run.sh user@remote-node localAddr remoteAddr localDockerFile remoteDockerFile virtualEnv ssl?
 
 where: 
 - user@remote-node: Remote node ssh access 
@@ -77,8 +77,7 @@ where:
 - remoteIP: remote IP addres with dataClay logicmodule exposed port. ex 84.88.184.227:11034
 - localDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose.yml
 - remoteDockerFile: path of docker file to be used in local. Ex: dockers/docker-compose-arm.yml
-- python-version: Python version.
-- dataclay-version: DataClay version.
+- virtualEnv: Python virtual environment with installed dataclay version.
 REMEMBER that python version and dataclay version should be consistent with docker images being used.
 - ssl?: can be true or false Indicates we want to use secure connections.
 
