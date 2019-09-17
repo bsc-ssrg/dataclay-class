@@ -1,6 +1,6 @@
 #!/bin/bash
 DATACLAYTOOL=tools/dClayTool.sh
-GRPCIO="1.17.1"
+GRPCIO="1.22.1"
 
 grn=$'\e[1;32m'
 blu=$'\e[1;34m'

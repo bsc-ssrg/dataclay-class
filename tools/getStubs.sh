@@ -9,6 +9,7 @@ printMsg() {
 	printf "\n******\n***** $1 \n******\n "
 }
 export DATACLAYCLIENTCONFIG=$SCRIPTDIR/../app/cfgfiles/client.properties
+export DATACLAYGLOBALCONFIG=$SCRIPTDIR/../app/cfgfiles/global.properties
 STUBSPATH="$SCRIPTDIR/../app/stubs"
 printMsg "Get stubs"
 mkdir -p $STUBSPATH

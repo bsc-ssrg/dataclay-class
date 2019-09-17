@@ -20,8 +20,10 @@ if [ "$#" -ne 7 ]; then
 fi
 # ==================================== PARAMETERS ==================================== #
 REMOTE_NODE=$1 #ex: user@node
-LOCAL_IP=$2 #ex 84.88.184.228
-REMOTE_IP=$3 #ex 84.88.51.177
+LOCAL_ADDR=$2 #ex 84.88.184.228
+REMOTE_ADDR=$3 #ex 84.88.51.177
+LOCAL_IP=${LOCAL_ADDR%:*}
+REMOTE_IP=${REMOTE_ADDR%:*}
 LOCAL_DOCKER_FILE=$4
 REMOTE_DOCKER_FILE=$5
 VIRTUAL_ENV=$6
@@ -38,6 +40,10 @@ if [ "$USE_SSL" != "true" ] && [ "$USE_SSL" != "false" ]; then
 	echo "ERROR: Last parameter should be true or false. True if SSL must be used. Flase otherwise. "
     exit -1
 fi
+
+echo "Local Address: $LOCAL_ADDR "
+echo "Local IP: $LOCAL_IP "
+
 # ==================================== IPS ==================================== #
 
 # recover ips (in case test failed)
@@ -46,6 +52,7 @@ ssh $REMOTE_NODE "cd ~/dataclay-class/; mv dockers/env/LM.environment.orig docke
 
 # change IPs in environment files in current and remote node 
 cp $SCRIPTDIR/dockers/env/LM.environment $SCRIPTDIR/dockers/env/LM.environment.orig
+
 sed -i "s/logicmodule1/${LOCAL_IP}/g" $SCRIPTDIR/dockers/env/LM.environment
 ssh $REMOTE_NODE "cd ~/dataclay-class/; cp dockers/env/LM.environment dockers/env/LM.environment.orig; sed -i \"s/logicmodule1/${REMOTE_IP}/g\" dockers/env/LM.environment"
 
@@ -65,7 +72,7 @@ rm -f $SCRIPTDIR/app/cfgfiles/global.properties
 # check if we should use SSL
 if [ "$USE_SSL" == "true" ]; then
 	printf "HOST=127.0.0.1\nTCPPORT=443" > $SCRIPTDIR/app/cfgfiles/client.properties
-	printf "CHECK_LOG4J_DEBUG=false\nSSL_CLIENT_TRUSTED_CERTIFICATES=../dockers/traefik/cert/rootCA.crt\nSSL_CLIENT_CERTIFICATE=../dockers/traefik/cert/agent.crt\nSSL_CLIENT_KEY=../dockers/traefik/cert/agent.pem" > $SCRIPTDIR/app/cfgfiles/global.properties
+	printf "CHECK_LOG4J_DEBUG=true\nSSL_CLIENT_TRUSTED_CERTIFICATES=$HOME/dataclay-class/dockers/traefik/cert/rootCA.crt\nSSL_CLIENT_CERTIFICATE=$HOME/dataclay-class/dockers/traefik/cert/agent.crt\nSSL_CLIENT_KEY=$HOME/dataclay-class/dockers/traefik/cert/agent.pem" > $SCRIPTDIR/app/cfgfiles/global.properties
 	
 else
 	printf "HOST=127.0.0.1\nTCPPORT=11034" > $SCRIPTDIR/app/cfgfiles/client.properties
@@ -83,7 +90,7 @@ ssh $REMOTE_NODE "cd ~/dataclay-class; bash tools/getStubs.sh" # get stubs in re
 
 # run app
 pushd $SCRIPTDIR/app/
-bash $SCRIPTDIR/app/run_app.sh $REMOTE_NODE $LOCAL_IP $REMOTE_IP $VIRTUAL_ENV # run application
+bash $SCRIPTDIR/app/run_app.sh $REMOTE_NODE $LOCAL_ADDR $REMOTE_ADDR $VIRTUAL_ENV # run application
 popd 
 
 # ==================================== CLEAN ==================================== #
