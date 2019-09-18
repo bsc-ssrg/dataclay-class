@@ -121,7 +121,7 @@ popd
 
 # Now we can build the docker images 
 echo " ===== Building docker dataclayclass/logicmodule using tag $DATACLAY_VERSION ====="
-docker build --build-arg DATACLAY_TAG=$DATACLAY_VERSION -f DockerfileLMCLASS -t dataclayclass/logicmodule .
+docker build --build-arg DATACLAY_TAG=$DATACLAY_VERSION -f class.LM.Dockerfile -t dataclayclass/logicmodule .
 
 echo " ===== Pulling docker dataclayclass/dsjava using tag $DATACLAY_VERSION ====="
 docker pull bscdataclay/dsjava:$DATACLAY_VERSION
@@ -129,19 +129,19 @@ echo " ===== Tagging docker dataclayclass/dsjava using tag $DATACLAY_VERSION ===
 docker tag bscdataclay/dsjava:$DATACLAY_VERSION dataclayclass/dsjava
 
 echo " ===== Building docker dataclayclass/dspython:py2.7 using tag $DATACLAY_VERSION-py2.7 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py2.7" -f DockerfileEECLASS -t dataclayclass/dspython:py2.7 .
+docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py2.7" -f class.EE.Dockerfile -t dataclayclass/dspython:py2.7 .
 
 echo " ===== Building docker dataclayclass/dspython:py3.6 using tag $DATACLAY_VERSION-py3.6 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py3.6" -f DockerfileEECLASS -t dataclayclass/dspython:py3.6 .
+docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py3.6" -f class.EE.Dockerfile -t dataclayclass/dspython:py3.6 .
 
 echo " ===== Building docker dataclayclass/dspython:arm-py2.7 using tag $DATACLAY_VERSION-arm-py2.7 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-arm-py2.7" -f DockerfileEECLASS-arm -t dataclayclass/dspython:arm-py2.7 .
+docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-arm-py2.7" -f arm.class.EE.Dockerfile -t dataclayclass/dspython:arm-py2.7 .
 
 echo " ===== Building docker dataclayclass/dspython:arm-py3.6 using tag $DATACLAY_VERSION-arm-py3.6 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-arm-py3.6" -f DockerfileEECLASS-arm -t dataclayclass/dspython:arm-py3.6 .
+docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-arm-py3.6" -f arm.class.EE.Dockerfile -t dataclayclass/dspython:arm-py3.6 .
 
 echo " ===== Building docker dataclayclass/logicmodule:arm using tag $DATACLAY_VERSION-arm ====="
-docker build --build-arg DATACLAY_TAG=$DATACLAY_VERSION-arm -f DockerfileLMCLASS-arm -t dataclayclass/logicmodule:arm .
+docker build --build-arg DATACLAY_TAG=$DATACLAY_VERSION-arm -f arm.class.LM.Dockerfile -t dataclayclass/logicmodule:arm .
 
 echo " ===== Building docker dataclayclass/dsjava:arm using tag $DATACLAY_VERSION-arm ====="
 docker pull bscdataclay/dsjava:$DATACLAY_VERSION-arm

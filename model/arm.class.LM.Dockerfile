@@ -1,6 +1,6 @@
 ARG DATACLAY_TAG
 
-FROM ubuntu:19.04
+FROM ubuntu:18.04
 RUN apt-get -y update
 RUN apt-get install -y sqlite3 libsqlite3-dev
 COPY ./LM.sqlite /tmp/dataclay/dump.sql
