@@ -7,12 +7,14 @@ services:
   ####################################
 
   logicmodule1:
-    image: "bscdataclay/logicmodule:${DATACLAY_VERSION}"
+    image: "bscdataclay/logicmodule:${DATACLAY_JAVA_CONTAINER_VERSION}"
     ports:
       - "11034:11034"
     environment:
       - LOGICMODULE_PORT_TCP=11034
       - LOGICMODULE_HOST=logicmodule1
+      - DATACLAY_ADMIN_USER=admin
+      - DATACLAY_ADMIN_PASSWORD=admin
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
@@ -22,7 +24,7 @@ services:
   ####################################
 
   ds1java1:
-    image: "bscdataclay/dsjava:${DATACLAY_VERSION}"
+    image: "bscdataclay/dsjava:${DATACLAY_JAVA_CONTAINER_VERSION}"
     ports:
       - "2127:2127"
     depends_on:
@@ -43,7 +45,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee1:
-    image: "bscdataclay/dspython:${DATACLAY_VERSION}-py2.7"
+    image: "bscdataclay/dspython:${DATACLAY_PYTHON_CONTAINER_VERSION}"
     ports:
       - "6867:6867"
     depends_on:

@@ -1,7 +1,14 @@
 ARG DATACLAY_TAG
+FROM ubuntu:18.04
+RUN apt-get -y update
+RUN apt-get install -y sqlite3 libsqlite3-dev
+COPY ./LM.sqlite /tmp/dataclay/dump.sql
+RUN sqlite3 "/tmp/dataclay/LM" ".read /tmp/dataclay/dump.sql"
+
+
 FROM bscdataclay/logicmodule:${DATACLAY_TAG}
 
-COPY ./LM.sqlite /tmp/dataclay/LM
+COPY --from=0 /tmp/dataclay/LM /tmp/dataclay/LM
 
 # The command can contain additional options for the Java Virtual Machine and
 # must contain a class to be executed.

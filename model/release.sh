@@ -4,7 +4,9 @@ TOOLSBASE="$SCRIPTDIR/../tools"
 TOOLSPATH="$TOOLSBASE/dClayTool.sh"
 DCLIB="$TOOLSBASE/dataclayclient.jar"
 MODEL="$SCRIPTDIR/src/"
-DATACLAY_VERSION="2.0.dev12"
+DATACLAY_VERSION="2.0.dev13"
+JDK="openjdk8"
+PYVER="py2.7"
 NAMESPACE="CityNS"
 USER="CityUser"
 PASS="p4ssw0rd"
@@ -84,7 +86,8 @@ export DATACLAYCLIENTCONFIG=$TMPDIR/client.properties
 # Build and start dataClay
 pushd $SCRIPTDIR/dockers
 echo " ===== Starting dataClay ===== "
-export DATACLAY_VERSION=$DATACLAY_VERSION
+export DATACLAY_JAVA_CONTAINER_VERSION=$DATACLAY_VERSION-$JDK
+export DATACLAY_PYTHON_CONTAINER_VERSION=$DATACLAY_VERSION-$PYVER
 docker-compose -f docker-compose.yml down #sanity check
 docker-compose -f docker-compose.yml up -d
 popd 
@@ -120,32 +123,40 @@ docker-compose -f docker-compose.yml down
 popd
 
 # Now we can build the docker images 
-echo " ===== Building docker dataclayclass/logicmodule using tag $DATACLAY_VERSION ====="
-docker build --build-arg DATACLAY_TAG=$DATACLAY_VERSION -f class.LM.Dockerfile -t dataclayclass/logicmodule .
+export DATACLAY_JAVA_CONTAINER_VERSION=$DATACLAY_VERSION-$JDK
+export DATACLAY_PYTHON_CONTAINER_VERSION=$DATACLAY_VERSION
 
-echo " ===== Pulling docker dataclayclass/dsjava using tag $DATACLAY_VERSION ====="
-docker pull bscdataclay/dsjava:$DATACLAY_VERSION
-echo " ===== Tagging docker dataclayclass/dsjava using tag $DATACLAY_VERSION ====="
-docker tag bscdataclay/dsjava:$DATACLAY_VERSION dataclayclass/dsjava
+echo " ===== Building docker dataclayclass/logicmodule using tag $DATACLAY_JAVA_CONTAINER_VERSION ====="
+docker build --build-arg DATACLAY_TAG=$DATACLAY_JAVA_CONTAINER_VERSION -f class.LM.Dockerfile -t dataclayclass/logicmodule .
 
-echo " ===== Building docker dataclayclass/dspython:py2.7 using tag $DATACLAY_VERSION-py2.7 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py2.7" -f class.EE.Dockerfile -t dataclayclass/dspython:py2.7 .
+echo " ===== Pulling docker dataclayclass/dsjava using tag $DATACLAY_JAVA_CONTAINER_VERSION ====="
+docker pull bscdataclay/dsjava:$DATACLAY_JAVA_CONTAINER_VERSION
 
-echo " ===== Building docker dataclayclass/dspython:py3.6 using tag $DATACLAY_VERSION-py3.6 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py3.6" -f class.EE.Dockerfile -t dataclayclass/dspython:py3.6 .
+echo " ===== Tagging docker dataclayclass/dsjava using tag $DATACLAY_JAVA_CONTAINER_VERSION ====="
+docker tag bscdataclay/dsjava:$DATACLAY_JAVA_CONTAINER_VERSION dataclayclass/dsjava
 
-echo " ===== Building docker dataclayclass/dspython:arm-py2.7 using tag $DATACLAY_VERSION-arm-py2.7 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-arm-py2.7" -f arm.class.EE.Dockerfile -t dataclayclass/dspython:arm-py2.7 .
+echo " ===== Building docker dataclayclass/dspython:py2.7 using tag $DATACLAY_PYTHON_CONTAINER_VERSION-py2.7 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_PYTHON_CONTAINER_VERSION-py2.7" -f class.EE.Dockerfile -t dataclayclass/dspython:py2.7 .
 
-echo " ===== Building docker dataclayclass/dspython:arm-py3.6 using tag $DATACLAY_VERSION-arm-py3.6 ====="
-docker build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-arm-py3.6" -f arm.class.EE.Dockerfile -t dataclayclass/dspython:arm-py3.6 .
+echo " ===== Building docker dataclayclass/dspython:py3.6 using tag $DATACLAY_PYTHON_CONTAINER_VERSION-py3.6 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_PYTHON_CONTAINER_VERSION-py3.6" -f class.EE.Dockerfile -t dataclayclass/dspython:py3.6 .
 
-echo " ===== Building docker dataclayclass/logicmodule:arm using tag $DATACLAY_VERSION-arm ====="
-docker build --build-arg DATACLAY_TAG=$DATACLAY_VERSION-arm -f arm.class.LM.Dockerfile -t dataclayclass/logicmodule:arm .
+# ========================== Arm ================================== # 
+export DATACLAY_JAVA_CONTAINER_VERSION=$DATACLAY_VERSION-arm-$JDK
+export DATACLAY_PYTHON_CONTAINER_VERSION=$DATACLAY_VERSION-arm
 
-echo " ===== Building docker dataclayclass/dsjava:arm using tag $DATACLAY_VERSION-arm ====="
-docker pull bscdataclay/dsjava:$DATACLAY_VERSION-arm
-docker tag bscdataclay/dsjava:$DATACLAY_VERSION-arm dataclayclass/dsjava:arm
+echo " ===== Building docker dataclayclass/dspython:arm-py2.7 using tag $DATACLAY_PYTHON_CONTAINER_VERSION-arm-py2.7 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_PYTHON_CONTAINER_VERSION-py2.7" -f class.EE.Dockerfile -t dataclayclass/dspython:arm-py2.7 .
+
+echo " ===== Building docker dataclayclass/dspython:arm-py3.6 using tag $DATACLAY_PYTHON_CONTAINER_VERSION-arm-py3.6 ====="
+docker build --build-arg DATACLAY_TAG="$DATACLAY_PYTHON_CONTAINER_VERSION-py3.6" -f class.EE.Dockerfile -t dataclayclass/dspython:arm-py3.6 .
+
+echo " ===== Building docker dataclayclass/logicmodule:arm using tag $DATACLAY_JAVA_CONTAINER_VERSION-arm ====="
+docker build --build-arg DATACLAY_TAG=$DATACLAY_JAVA_CONTAINER_VERSION -f class.LM.Dockerfile -t dataclayclass/logicmodule:arm .
+
+echo " ===== Building docker dataclayclass/dsjava:arm using tag $DATACLAY_JAVA_CONTAINER_VERSION-arm ====="
+docker pull bscdataclay/dsjava:$DATACLAY_JAVA_CONTAINER_VERSION
+docker tag bscdataclay/dsjava:$DATACLAY_JAVA_CONTAINER_VERSION dataclayclass/dsjava:arm
 
 
 

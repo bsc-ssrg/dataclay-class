@@ -18,12 +18,14 @@ if __name__ == "__main__":
         dataclay2_addr_split = dataclay2_addr.split(":")
         dataclay2_ip = dataclay2_addr_split[0]
         dataclay2_port = int(dataclay2_addr_split[1])
+        print("Registering external dataClay at %s" % dataclay2_addr)
         dataclay_id2 = register_external_dataclay(dataclay2_ip, dataclay2_port)
     
         # Create thousands of event
         current_date = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S")
         event_type = 1
         i = 0
+        print("Creating events")
         while i < 10:
 
             events_to_federate = EventsInCar()
