@@ -19,7 +19,7 @@ services:
   #  LOGIC MODULE ON DC 1            #
   ####################################
   logicmodule1:
-    image: "dataclayclass/logicmodule:arm"
+    image: "dataclayclass/logicmodule"
     depends_on:
       - proxy
     env_file:
@@ -46,7 +46,7 @@ services:
   #  JAVA DATA SERVICES ON DC 1      #
   ####################################
   ds1java1:
-    image: "dataclayclass/dsjava:arm"
+    image: "dataclayclass/dsjava"
     depends_on:
       - logicmodule1
       - proxy
@@ -69,7 +69,7 @@ services:
   # Python ExecutionEnvironment (which, by default, are unused)
   # See initDC.sh shell script for more information on initialization
   ds1pythonee1:
-    image: "dataclayclass/dspython:arm-py2.7"
+    image: "dataclayclass/dspython:py2.7"
     depends_on:
       - logicmodule1
       - ds1java1
