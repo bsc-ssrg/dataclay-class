@@ -1,10 +1,10 @@
+ARG DATACLAY_TAG
 FROM ubuntu:18.04
 RUN apt-get -y update
 RUN apt-get install -y sqlite3 libsqlite3-dev
 COPY ./LM.sqlite /tmp/dataclay/dump.sql
 RUN sqlite3 "/tmp/dataclay/LM" ".read /tmp/dataclay/dump.sql"
 
-ARG DATACLAY_TAG
 FROM bscdataclay/logicmodule:${DATACLAY_TAG}
 COPY --from=0 /tmp/dataclay/LM /tmp/dataclay/LM
 

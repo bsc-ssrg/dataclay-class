@@ -15,7 +15,11 @@ services:
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-
+    healthcheck:
+       interval: 5s
+       retries: 10
+       test: ["CMD-SHELL", "health_check/logicmodule_health_check.sh java 1 1"]
+       
   ####################################
   #  JAVA DATA SERVICES ON DC 1      #
   ####################################
@@ -34,7 +38,11 @@ services:
     volumes:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
-
+    healthcheck:
+       interval: 5s
+       retries: 10
+       test: ["CMD-SHELL", "health_check/dataservice_health_check.sh"]
+       
   ####################################
   #  PYTHON DATA SERVICES ON DC 1    #
   ####################################

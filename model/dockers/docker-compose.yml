@@ -19,8 +19,8 @@ services:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
     healthcheck:
-       start_period: 30s
-       retries: 5
+       interval: 5s
+       retries: 10
        test: ["CMD-SHELL", "health_check/logicmodule_health_check.sh java 1 1"]
        
   ####################################
@@ -42,8 +42,8 @@ services:
       - ./prop/global.properties:/usr/src/dataclay/cfgfiles/global.properties:ro
       - ./prop/log4j2.xml:/usr/src/dataclay/log4j2.xml:ro
     healthcheck:
-       start_period: 30s
-       retries: 5
+       interval: 5s
+       retries: 10
        test: ["CMD-SHELL", "health_check/dataservice_health_check.sh"]
        
   ####################################

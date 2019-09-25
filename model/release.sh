@@ -58,6 +58,7 @@ pushd $SCRIPTDIR/dockers
 echo " ===== Starting dataClay ===== "
 export DATACLAY_JAVA_CONTAINER_VERSION=$DATACLAY_VERSION
 export DATACLAY_PYTHON_CONTAINER_VERSION=$DATACLAY_VERSION-$PYVER
+docker-compose pull
 docker-compose -f docker-compose.yml down #sanity check
 docker-compose -f docker-compose.yml up -d
 popd 

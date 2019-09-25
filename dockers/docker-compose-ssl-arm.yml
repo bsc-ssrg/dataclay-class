@@ -40,7 +40,10 @@ services:
       - "traefik.frontend.rule=Headers: service-alias,logicmodule1"
       - "traefik.port=1034"
       - "traefik.protocol=h2c"
-
+    healthcheck:
+       interval: 5s
+       retries: 10
+       test: ["CMD-SHELL", "health_check/logicmodule_health_check.sh java 1 1"]
 
   ####################################
   #  JAVA DATA SERVICES ON DC 1      #
@@ -61,7 +64,11 @@ services:
     command: ["-Xdebug", "-Dlog4j.configurationFile=/usr/src/dataclay/log4j2.xml",
               "-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n",
               "dataclay.dataservice.server.DataServiceSrv"]
-
+    healthcheck:
+       interval: 5s
+       retries: 10
+       test: ["CMD-SHELL", "health_check/dataservice_health_check.sh"]
+       
   ####################################
   #  PYTHON DATA SERVICES ON DC 1    #
   ####################################
