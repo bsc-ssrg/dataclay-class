@@ -3,7 +3,7 @@ version: '2'
 services:
 
   proxy:
-    image: "traefik:alpine"
+    image: "traefik:v1.7.17"
     restart: unless-stopped
     command: --api --docker --docker.exposedByDefault=false --loglevel=info
     volumes:

@@ -1,0 +1,2 @@
+ARG DATACLAY_TAG
+FROM bscdataclay/dsjava:${DATACLAY_TAG}

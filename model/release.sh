@@ -1,11 +1,12 @@
 #!/bin/bash
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+PLATFORMS=linux/amd64,linux/arm/v7
 TOOLSBASE="$SCRIPTDIR/../tools"
 TOOLSPATH="$TOOLSBASE/dClayTool.sh"
 DCLIB="$TOOLSBASE/dataclayclient.jar"
 MODEL="$SCRIPTDIR/src/"
-DATACLAY_VERSION="2.11.dev13"
-PYVER="py2.7"
+DATACLAY_JAVA_CONTAINER_VERSION="2.0.jdk11.dev14"
+DATACLAY_PYTHON_CONTAINER_VERSION="2.0.py27.dev14"
 NAMESPACE="CityNS"
 USER="CityUser"
 PASS="p4ssw0rd"
@@ -56,8 +57,8 @@ export DATACLAYCLIENTCONFIG=$TMPDIR/client.properties
 # Build and start dataClay
 pushd $SCRIPTDIR/dockers
 echo " ===== Starting dataClay ===== "
-export DATACLAY_JAVA_CONTAINER_VERSION=$DATACLAY_VERSION
-export DATACLAY_PYTHON_CONTAINER_VERSION=$DATACLAY_VERSION-$PYVER
+export DATACLAY_JAVA_CONTAINER_VERSION
+export DATACLAY_PYTHON_CONTAINER_VERSION
 docker-compose pull
 docker-compose -f docker-compose.yml down #sanity check
 docker-compose -f docker-compose.yml up -d
@@ -93,27 +94,23 @@ pushd $SCRIPTDIR/dockers
 docker-compose -f docker-compose.yml down
 popd
 
-BUILD_PARAMS="."
+BUILD_PARAMS="--load ."
 if [ "$PUSH" = true ] ; then
-	BUILD_PARAMS="--push ."
+	BUILD_PARAMS="--platform $PLATFORMS --push ."
 fi
 
 echo " ===== Building docker dataclayclass/logicmodule using tag $DATACLAY_JAVA_CONTAINER_VERSION ====="
 docker buildx build --build-arg DATACLAY_TAG=$DATACLAY_JAVA_CONTAINER_VERSION -f class.LM.Dockerfile -t dataclayclass/logicmodule $BUILD_PARAMS
 
-echo " ===== Building docker dataclayclass/dspython:py2.7 using tag $DATACLAY_VERSION-py2.7 ====="
-docker buildx build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py2.7" -f class.EE.Dockerfile -t dataclayclass/dspython:py2.7 $BUILD_PARAMS
+echo " ===== Building docker dataclayclass/dsjava using tag $DATACLAY_JAVA_CONTAINER_VERSION ====="
+docker buildx build --build-arg DATACLAY_TAG=$DATACLAY_JAVA_CONTAINER_VERSION -f class.DS.Dockerfile -t dataclayclass/dsjava $BUILD_PARAMS
 
-echo " ===== Building docker dataclayclass/dspython:py3.6 using tag $DATACLAY_VERSION-py3.6 ====="
-docker buildx build --build-arg DATACLAY_TAG="$DATACLAY_VERSION-py3.6" -f class.EE.Dockerfile -t dataclayclass/dspython:py3.6 $BUILD_PARAMS
+DATACLAY_PYTHON_CONTAINER_VERSION="2.0.py27.dev13"
+echo " ===== Building docker dataclayclass/dspython:py2.7 using tag $DATACLAY_PYTHON_CONTAINER_VERSION ====="
+docker buildx build --build-arg DATACLAY_TAG="$DATACLAY_PYTHON_CONTAINER_VERSION" -f class.EE.Dockerfile -t dataclayclass/dspython:py2.7 $BUILD_PARAMS
 
-echo " ===== Tagging docker dataclayclass/dsjava using tag $DATACLAY_JAVA_CONTAINER_VERSION ====="
-docker tag bscdataclay/dsjava:$DATACLAY_JAVA_CONTAINER_VERSION dataclayclass/dsjava
-
-if [ "$PUSH" = true ] ; then
-	docker push dataclayclass/dsjava
-fi
-
-
+DATACLAY_PYTHON_CONTAINER_VERSION="2.0.py36.dev13"
+echo " ===== Building docker dataclayclass/dspython:py3.6 using tag $DATACLAY_PYTHON_CONTAINER_VERSION ====="
+docker buildx build --build-arg DATACLAY_TAG="$DATACLAY_PYTHON_CONTAINER_VERSION" -f class.EE.Dockerfile -t dataclayclass/dspython:py3.6 $BUILD_PARAMS
 
 
